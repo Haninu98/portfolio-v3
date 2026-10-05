@@ -1,30 +1,66 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { PROFILE } from "@/lib/data";
 
 export default function LanyardCard() {
   const [isFlipped, setIsFlipped] = useState(false);
-  const [rotateOffset, setRotateOffset] = useState({ x: 0, y: 0, r: 0 });
+  const [swayAngle, setSwayAngle] = useState(0);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const animFrameRef = useRef<number | null>(null);
+  const currentAngleRef = useRef(0);
+  const targetAngleRef = useRef(0);
+  const velocityRef = useRef(0);
+
+  // Physics-based spring-damped pendulum loop
+  useEffect(() => {
+    let lastTime = performance.now();
+
+    const loop = (time: number) => {
+      const dt = Math.min((time - lastTime) / 1000, 0.1);
+      lastTime = time;
+
+      // Spring physics: F = -k * x - c * v
+      const springK = 35.0; // Spring stiffness
+      const damping = 4.5; // Damping ratio
+      const force = -springK * (currentAngleRef.current - targetAngleRef.current) - damping * velocityRef.current;
+      velocityRef.current += force * dt;
+      currentAngleRef.current += velocityRef.current * dt;
+
+      setSwayAngle(currentAngleRef.current);
+      animFrameRef.current = requestAnimationFrame(loop);
+    };
+
+    animFrameRef.current = requestAnimationFrame(loop);
+    return () => {
+      if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
+    };
+  }, []);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left - rect.width / 2;
-    const y = e.clientY - rect.top - rect.height / 2;
-
-    // Subtle tilt & pendulum rotation calculation
-    const rotX = -(y / rect.height) * 12;
-    const rotY = (x / rect.width) * 14;
-    const rotZ = (x / rect.width) * 4;
-
-    setRotateOffset({ x: rotX, y: rotY, r: rotZ });
+    const centerX = rect.left + rect.width / 2;
+    const deltaX = e.clientX - centerX;
+    // Map deltaX (-150px to +150px) to angle (-12deg to +12deg)
+    const angle = Math.max(-12, Math.min(12, (deltaX / 150) * 12));
+    targetAngleRef.current = angle;
   };
 
   const handleMouseLeave = () => {
-    setRotateOffset({ x: 0, y: 0, r: 0 });
+    targetAngleRef.current = 0;
+  };
+
+  const toggleFlip = () => {
+    setIsFlipped((prev) => !prev);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      toggleFlip();
+    }
   };
 
   return (
@@ -32,180 +68,250 @@ export default function LanyardCard() {
       ref={containerRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="relative flex flex-col items-center select-none pt-2"
+      className="relative flex flex-col items-center justify-start select-none w-[320px] mx-auto"
+      style={{
+        transformOrigin: "top center",
+        transform: `rotate(${swayAngle}deg)`,
+        transition: "transform 0.05s ease-out",
+      }}
     >
-      {/* Lanyard Fabric Strap with Repeating Marquee */}
-      <div className="relative w-12 h-24 overflow-hidden rounded-t-sm shadow-xs border-x border-[var(--line)] bg-[var(--ink)] flex flex-col items-center">
-        <div className="text-[9px] font-mono tracking-widest text-[var(--paper)] opacity-85 rotate-90 whitespace-nowrap uppercase py-4 select-none">
-          HANI IZEM • EMBEDDED SYSTEMS • ALSTOM •
+      {/* 1. LANYARD STRAP (Spec: 30px x 56px with scrolling text) */}
+      <div className="relative w-[30px] h-[56px] bg-[#141414] overflow-hidden rounded-t-sm shadow-sm flex flex-col items-center border-x border-black/20">
+        {/* Subtle woven texture overlay */}
+        <div
+          className="absolute inset-0 opacity-20 pointer-events-none"
+          style={{
+            backgroundImage: "radial-gradient(#ffffff 1px, transparent 1px)",
+            backgroundSize: "4px 4px",
+          }}
+        />
+
+        {/* Marquee text scrolling vertically down the strap */}
+        <div className="flex flex-col items-center text-[8px] font-mono tracking-widest text-[#f4f2ee]/90 font-medium rotate-90 whitespace-nowrap uppercase py-3 animate-marquee-vertical">
+          <span>HANI IZEM • EMBEDDED SYSTEMS • ALSTOM • </span>
+          <span>HANI IZEM • EMBEDDED SYSTEMS • ALSTOM • </span>
         </div>
       </div>
 
-      {/* Metal Clip & Ring Assembly */}
-      <div className="relative flex flex-col items-center -mt-1 z-10">
-        {/* Metal Carabiner Clip */}
-        <div className="w-8 h-4 rounded-xs border-2 border-zinc-400 bg-linear-to-b from-zinc-200 via-zinc-400 to-zinc-300 shadow-xs" />
-        {/* Clip connector */}
-        <div className="w-2.5 h-3 bg-zinc-600 rounded-xs" />
-        {/* Metal ring into card hole */}
-        <div className="w-6 h-6 rounded-full border-2 border-zinc-400 -mt-1 flex items-center justify-center bg-transparent" />
+      {/* 2. METAL CLUSTER (Buckle + Swivel Clip + Ring) */}
+      <div className="flex flex-col items-center -mt-[1px] z-20">
+        {/* Metal buckle clamp (30x8mm) */}
+        <div className="w-[30px] h-[9px] rounded-[1px] bg-gradient-to-b from-[#d4d4d8] via-[#a1a1aa] to-[#71717a] shadow-[inset_0_1px_1px_rgba(255,255,255,0.8),0_1px_2px_rgba(0,0,0,0.3)] border border-[#71717a]" />
+        {/* Swivel neck */}
+        <div className="w-[8px] h-[6px] bg-gradient-to-r from-[#71717a] via-[#e4e4e7] to-[#71717a]" />
+        {/* Metal key ring connecting to slot */}
+        <div className="w-[20px] h-[20px] rounded-full border-[2.5px] border-[#a1a1aa] -mt-[2px] bg-transparent shadow-xs" />
       </div>
 
-      {/* Hanging Badge Card with 3D Flip */}
+      {/* 3. REALISTIC ID BADGE CARD (Spec: 300px x 404px, 3D flip) */}
       <div
-        className="w-full max-w-[290px] sm:max-w-[310px] perspective-[1000px] cursor-pointer mt-1"
-        onClick={() => setIsFlipped(!isFlipped)}
-        title="Click or tap to flip credential card"
+        tabIndex={0}
+        role="button"
+        aria-label="Developer ID Card. Press Enter or Space to flip"
+        onClick={toggleFlip}
+        onKeyDown={handleKeyDown}
+        className="w-[300px] h-[404px] -mt-[8px] cursor-pointer group focus:outline-none focus:ring-2 focus:ring-[var(--ink)] rounded-[24px]"
+        style={{ perspective: "1200px" }}
       >
         <div
-          className="relative w-full aspect-[1/1.48] transition-transform duration-700 [transform-style:preserve-3d] rounded-2xl shadow-xl border border-[var(--line)]"
+          className="relative w-full h-full rounded-[24px] shadow-2xl transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
           style={{
-            transform: `rotateZ(${rotateOffset.r}deg) rotateX(${rotateOffset.x}deg) rotateY(${
-              (isFlipped ? 180 : 0) + rotateOffset.y
-            }deg)`,
-            transition: "transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+            transformStyle: "preserve-3d",
+            transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
           }}
         >
-          {/* Card Slot Opening at Top */}
-          <div className="absolute top-2.5 left-1/2 -translate-x-1/2 w-10 h-2 rounded-full bg-zinc-300/80 border border-zinc-400 z-30" />
-
-          {/* FRONT OF BADGE */}
+          {/* ===================== FRONT OF BADGE ===================== */}
           <div
-            className="absolute inset-0 w-full h-full bg-[var(--card)] rounded-2xl p-5 flex flex-col justify-between [backface-visibility:hidden] overflow-hidden border border-[var(--line)]"
+            className="absolute inset-0 w-full h-full bg-[#ffffff] rounded-[24px] border border-[rgba(13,13,13,0.12)] p-5 flex flex-col justify-between overflow-hidden shadow-lg"
+            style={{
+              backfaceVisibility: "hidden",
+              WebkitBackfaceVisibility: "hidden",
+            }}
           >
-            {/* Subtle holographic foil strip */}
-            <div className="absolute top-0 right-6 w-8 h-full bg-linear-to-b from-transparent via-zinc-100 to-transparent opacity-40 pointer-events-none" />
+            {/* Top slot hole punch cutout for the metal ring */}
+            <div className="absolute top-2.5 left-1/2 -translate-x-1/2 w-[28px] h-[5px] rounded-full bg-[#f4f2ee] border border-[rgba(13,13,13,0.18)] shadow-inner z-30" />
 
-            {/* Top Badge Header */}
-            <div className="pt-2 flex items-center justify-between border-b border-[var(--line)] pb-3">
-              <div className="flex items-center gap-1.5">
-                <div className="w-3 h-3 rounded-full bg-[var(--ink)] flex items-center justify-center text-[7px] text-[var(--paper)] font-mono font-bold">
-                  HI
+            {/* Top black header band (Spec: "DEVELOPER ID" / "ENGINEER ID") */}
+            <div className="pt-2">
+              <div className="bg-[#0d0d0d] text-[#ffffff] rounded-lg py-1.5 px-3 flex items-center justify-between">
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="font-mono text-[9px] font-bold tracking-widest uppercase">
+                    ENGINEER ID
+                  </span>
                 </div>
-                <span className="text-[10px] font-mono font-bold tracking-wider uppercase text-[var(--ink)]">
-                  ENGINEERING CORPS
+                <span className="font-mono text-[9px] tracking-wider text-zinc-400">
+                  {PROFILE.idCard.idNo}
                 </span>
               </div>
-              <span className="font-mono text-[9px] text-[var(--mute)]">
-                {PROFILE.idCard.idNo}
+            </div>
+
+            {/* Photo frame (Spec: 128x156 frame with gray gradient ring, soft halo, hover zoom) */}
+            <div className="flex flex-col items-center my-auto">
+              <div className="relative w-[128px] h-[156px] rounded-[16px] p-[3px] bg-gradient-to-b from-zinc-200 via-zinc-400 to-zinc-600 shadow-md group-hover:scale-[1.03] transition-transform duration-300">
+                <div className="relative w-full h-full rounded-[13px] overflow-hidden bg-[#f4f2ee]">
+                  <Image
+                    src="/portrait-bust.webp"
+                    alt="Hani IZEM - Engineer Badge Portrait"
+                    fill
+                    priority
+                    className="object-cover"
+                    sizes="128px"
+                  />
+                  {/* Soft highlight glare */}
+                  <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent pointer-events-none" />
+                </div>
+              </div>
+
+              {/* Name & Role */}
+              <div className="text-center mt-3 space-y-0.5">
+                <h3 className="text-lg font-bold text-[#0d0d0d] tracking-tight uppercase">
+                  {PROFILE.name}
+                </h3>
+                <p className="font-mono text-[10px] text-[#77756f] max-w-[240px] leading-tight">
+                  {PROFILE.role}
+                </p>
+              </div>
+
+              {/* Data Table: ID No / Dept / Valid Till */}
+              <div className="w-full mt-3 grid grid-cols-3 gap-1 bg-[#f4f2ee] rounded-lg p-2 text-center border border-[rgba(13,13,13,0.06)]">
+                <div>
+                  <span className="text-[7.5px] font-mono text-[#77756f] block uppercase">
+                    ID NO.
+                  </span>
+                  <span className="text-[10px] font-mono font-bold text-[#0d0d0d]">
+                    {PROFILE.idCard.idNo}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-[7.5px] font-mono text-[#77756f] block uppercase">
+                    DEPT.
+                  </span>
+                  <span className="text-[9.5px] font-mono font-semibold text-[#0d0d0d] truncate block">
+                    Rail & PLM
+                  </span>
+                </div>
+                <div>
+                  <span className="text-[7.5px] font-mono text-[#77756f] block uppercase">
+                    VALID TILL
+                  </span>
+                  <span className="text-[10px] font-mono font-bold text-[#0d0d0d]">
+                    {PROFILE.idCard.validTill}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom Barcode & Holographic Security Foil (Spec: gray barcode + holographic sticker) */}
+            <div className="pt-2 border-t border-[rgba(13,13,13,0.08)] flex items-center justify-between">
+              {/* Barcode */}
+              <div className="flex items-center gap-[2px] h-7 py-0.5">
+                {[2, 1, 3, 1, 2, 4, 1, 2, 1, 3, 2, 1, 4, 2, 1, 3, 1, 2].map((w, idx) => (
+                  <span
+                    key={idx}
+                    className="bg-[#0d0d0d] h-full rounded-[0.5px]"
+                    style={{ width: `${w}px` }}
+                  />
+                ))}
+              </div>
+
+              {/* Holographic sticker */}
+              <div className="relative w-10 h-7 rounded-sm border border-zinc-300 overflow-hidden bg-gradient-to-tr from-zinc-200 via-zinc-100 to-zinc-300 shadow-xs flex items-center justify-center">
+                <span className="font-mono text-[7px] font-extrabold tracking-tighter text-zinc-500 uppercase select-none">
+                  VALID
+                </span>
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent animate-pulse" />
+              </div>
+
+              {/* Flip prompt */}
+              <span className="font-mono text-[8px] text-[#77756f] flex items-center gap-1">
+                <span>↻ FLIP</span>
               </span>
-            </div>
-
-            {/* Middle: Portrait Bust Photo + Core Role */}
-            <div className="flex flex-col items-center text-center my-auto">
-              <div className="relative w-24 h-28 rounded-xl overflow-hidden border border-[var(--line)] shadow-xs bg-[var(--paper)] mb-3">
-                <Image
-                  src="/portrait-bust.webp"
-                  alt="Hani IZEM Identification Photo"
-                  fill
-                  className="object-cover"
-                  sizes="120px"
-                />
-              </div>
-
-              <h3 className="text-base font-semibold tracking-tight text-[var(--ink)]">
-                {PROFILE.name}
-              </h3>
-              <p className="text-[11px] text-[var(--mute)] font-mono mt-0.5 max-w-[200px] leading-tight">
-                {PROFILE.role}
-              </p>
-
-              {/* Department pill */}
-              <div className="mt-2.5 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[var(--paper)] border border-[var(--line)] text-[9px] font-mono text-[var(--ink-2)]">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
-                <span>{PROFILE.idCard.dept}</span>
-              </div>
-            </div>
-
-            {/* Bottom Barcode / Security Strip */}
-            <div className="border-t border-[var(--line)] pt-3 flex items-center justify-between">
-              <div className="space-y-0.5 text-left">
-                <div className="text-[8px] font-mono uppercase text-[var(--mute)]">
-                  VALIDITY
-                </div>
-                <div className="text-[10px] font-mono font-medium text-[var(--ink)]">
-                  {PROFILE.idCard.validTill}
-                </div>
-              </div>
-
-              {/* Barcode graphic */}
-              <div className="flex items-center gap-0.5 h-5 px-1 bg-white border border-[var(--line)] rounded-xs">
-                <span className="w-0.5 h-4 bg-zinc-900" />
-                <span className="w-1 h-4 bg-zinc-900" />
-                <span className="w-0.5 h-4 bg-zinc-900" />
-                <span className="w-1.5 h-4 bg-zinc-900" />
-                <span className="w-0.5 h-4 bg-zinc-900" />
-                <span className="w-1 h-4 bg-zinc-900" />
-                <span className="w-0.5 h-4 bg-zinc-900" />
-                <span className="w-0.5 h-4 bg-zinc-900" />
-                <span className="w-1.5 h-4 bg-zinc-900" />
-              </div>
-            </div>
-
-            {/* Flip hint chip */}
-            <div className="text-center text-[9px] font-mono text-[var(--mute)] pt-1 flex items-center justify-center gap-1">
-              <span>↻ Click to view credentials</span>
             </div>
           </div>
 
-          {/* BACK OF BADGE */}
+          {/* ===================== BACK OF BADGE ===================== */}
           <div
-            className="absolute inset-0 w-full h-full bg-[var(--card)] rounded-2xl p-5 flex flex-col justify-between [transform:rotateY(180deg)] [backface-visibility:hidden] overflow-hidden border border-[var(--line)]"
+            className="absolute inset-0 w-full h-full bg-[#ffffff] rounded-[24px] border border-[rgba(13,13,13,0.12)] p-5 flex flex-col justify-between overflow-hidden shadow-lg"
+            style={{
+              backfaceVisibility: "hidden",
+              WebkitBackfaceVisibility: "hidden",
+              transform: "rotateY(180deg)",
+            }}
           >
-            {/* Top Header */}
-            <div className="pt-2 flex items-center justify-between border-b border-[var(--line)] pb-2.5">
-              <span className="text-[10px] font-mono font-bold tracking-wider uppercase text-[var(--ink)]">
-                ACADEMIC & CLEARANCES
+            {/* Top slot cutout */}
+            <div className="absolute top-2.5 left-1/2 -translate-x-1/2 w-[28px] h-[5px] rounded-full bg-[#f4f2ee] border border-[rgba(13,13,13,0.18)] shadow-inner z-30" />
+
+            {/* Back Header */}
+            <div className="pt-2 border-b border-[rgba(13,13,13,0.08)] pb-2">
+              <span className="font-mono text-[9px] font-bold tracking-wider uppercase text-[#0d0d0d] block">
+                WHAT I AM // CREDENTIALS
               </span>
-              <span className="text-[9px] font-mono text-[var(--mute)]">
-                PARIS • ROUEN
+              <span className="font-mono text-[8px] text-[#77756f]">
+                OFFICIAL RECORD & CLEARANCE
               </span>
             </div>
 
-            {/* Body */}
-            <div className="space-y-3 my-auto text-left">
+            {/* Body: 4-5 lines drawn strictly from resume */}
+            <div className="my-auto space-y-2.5 text-left">
               <div>
-                <span className="text-[9px] font-mono uppercase text-[var(--mute)] block">
+                <span className="font-mono text-[8px] uppercase tracking-wider text-[#77756f] block">
                   Degree & Alma Mater
                 </span>
-                <span className="text-xs font-semibold text-[var(--ink)] block">
+                <span className="text-xs font-bold text-[#0d0d0d] block">
                   {PROFILE.idCard.degree}
                 </span>
-                <span className="text-[10px] text-[var(--mute)] font-mono">
-                  Major: Embedded Systems (Automotive/Aeronautics)
+                <span className="font-mono text-[9px] text-[#3a3a3a] block">
+                  Specialization: Embedded Systems & Rail
                 </span>
               </div>
 
               <div>
-                <span className="text-[9px] font-mono uppercase text-[var(--mute)] block mb-1">
-                  Core Competencies
+                <span className="font-mono text-[8px] uppercase tracking-wider text-[#77756f] block">
+                  Industrial Experience
                 </span>
-                <div className="flex flex-wrap gap-1">
-                  {PROFILE.idCard.keySkills.map((s) => (
+                <span className="text-[10px] text-[#0d0d0d] font-medium block">
+                  • Alstom: Project Configuration & Change Manager (CBTC GoA4)
+                </span>
+                <span className="text-[10px] text-[#0d0d0d] font-medium block">
+                  • Renault Group: 3 yrs Embedded Systems (ISO 26262 ASIL-D)
+                </span>
+              </div>
+
+              <div>
+                <span className="font-mono text-[8px] uppercase tracking-wider text-[#77756f] block">
+                  Core Problem-Solving & Tooling
+                </span>
+                <div className="flex flex-wrap gap-1 mt-1">
+                  {PROFILE.idCard.keySkills.map((sk) => (
                     <span
-                      key={s}
-                      className="px-1.5 py-0.5 rounded-xs bg-[var(--paper)] border border-[var(--line)] text-[9px] font-mono text-[var(--ink)]"
+                      key={sk}
+                      className="px-1.5 py-0.5 rounded-[3px] bg-[#f4f2ee] border border-[rgba(13,13,13,0.08)] text-[8px] font-mono text-[#0d0d0d]"
                     >
-                      {s}
+                      {sk}
                     </span>
                   ))}
                 </div>
               </div>
 
-              <div>
-                <span className="text-[9px] font-mono uppercase text-[var(--mute)] block">
-                  Language Proficiency
+              {/* Signature Line */}
+              <div className="pt-1">
+                <span className="font-mono text-[8px] uppercase tracking-wider text-[#77756f] block">
+                  Holder Signature
                 </span>
-                <span className="text-[10px] font-mono text-[var(--ink-2)]">
-                  French: Bilingual • English: TOEIC 850 • Arabic: Native
-                </span>
+                <div className="h-6 flex items-end">
+                  <span className="font-serif italic text-base text-[#0d0d0d] tracking-wider select-none">
+                    Hani Izem
+                  </span>
+                </div>
+                <div className="w-full h-[1px] bg-zinc-300 mt-0.5" />
               </div>
             </div>
 
-            {/* Bottom Footer */}
-            <div className="border-t border-[var(--line)] pt-2.5 flex items-center justify-between text-[9px] font-mono text-[var(--mute)]">
-              <span>SECURITY LEVEL 01</span>
-              <span>↻ Click to return</span>
+            {/* Back Footer: "If found, say hello · [email]" */}
+            <div className="pt-2 border-t border-[rgba(13,13,13,0.08)] flex items-center justify-between text-[8.5px] font-mono text-[#77756f]">
+              <span className="truncate">If found, say hello · {PROFILE.email}</span>
+              <span className="shrink-0 ml-1">↻</span>
             </div>
           </div>
         </div>
