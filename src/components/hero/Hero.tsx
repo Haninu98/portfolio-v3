@@ -107,17 +107,17 @@ export default function Hero() {
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-[95vh] pt-28 pb-16 flex flex-col justify-between overflow-hidden bg-[var(--paper)]"
+      className="relative min-h-[96vh] pt-24 pb-12 flex flex-col justify-between overflow-hidden bg-[var(--paper)] select-none"
     >
-      {/* 1. Giant Outlined Ghost Word "HANI" Behind Character */}
+      {/* 1. Giant Outlined Ghost Word "HANI" Across Entire Screen Behind Person (Exact Reel frame_01_2.0s.jpg) */}
       <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 select-none pointer-events-none z-0"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full select-none pointer-events-none z-0"
         aria-hidden="true"
       >
         <span
-          className="text-[20vw] font-black uppercase tracking-tighter opacity-[0.045] block text-center leading-none"
+          className="text-[22vw] font-black uppercase tracking-tighter opacity-[0.05] block text-center leading-none"
           style={{
-            WebkitTextStroke: "2px var(--ink)",
+            WebkitTextStroke: "2.5px var(--ink)",
             color: "transparent",
           }}
         >
@@ -125,122 +125,100 @@ export default function Hero() {
         </span>
       </div>
 
-      {/* 2. Main Hero Container */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10 flex-1 flex flex-col justify-center items-center text-center">
-        {/* Availability Badge */}
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[var(--card)] border border-[var(--line)] shadow-xs mb-4">
+      {/* 2. Top Bar Audio Button & Availability Badge */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-20 flex items-center justify-between">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[var(--card)] border border-[var(--line)] shadow-xs">
           <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse-dot" />
           <span className="text-xs font-mono uppercase tracking-wider text-[var(--ink-2)]">
-            Open for Engineering Missions • Alstom Rail & Embedded
+            Open for missions • Paris & Remote
           </span>
         </div>
 
-        {/* 3. Centered Video Stage (Aspect-Ratio 768/960, Height min(96svh, 1040px)) */}
-        <div className="relative w-full max-w-[420px] sm:max-w-[460px] md:max-w-[500px] h-[55vh] sm:h-[62vh] md:h-[68vh] mx-auto flex items-center justify-center my-2">
-          {/* Subtle soft backdrop ring */}
-          <div className="absolute inset-4 rounded-full border border-[var(--line)] bg-[var(--card)]/40 -z-10" />
+        {/* 46px Round Solid Ink Sound Control Button */}
+        <button
+          onClick={toggleSound}
+          aria-label={isPlayingSound ? "Mute audio" : "Play audio with voice introduction"}
+          className="w-[46px] h-[46px] rounded-full bg-[var(--ink)] text-[var(--paper)] shadow-lg flex items-center justify-center hover:scale-105 active:scale-95 transition-all cursor-pointer z-20 group"
+        >
+          {isPlayingSound ? (
+            <span className="flex items-center gap-[3px] h-3.5">
+              <span className="w-[3px] h-3.5 bg-[var(--paper)] rounded-full animate-bounce [animation-delay:-0.3s]" />
+              <span className="w-[3px] h-3.5 bg-[var(--paper)] rounded-full animate-bounce [animation-delay:-0.15s]" />
+              <span className="w-[3px] h-3.5 bg-[var(--paper)] rounded-full animate-bounce" />
+            </span>
+          ) : (
+            <svg className="w-4 h-4 fill-current ml-0.5" viewBox="0 0 24 24">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          )}
 
-          {/* HTML5 Seamless Looping Video with Multiply Blend */}
-          <div className="relative w-full h-full mix-blend-multiply flex items-center justify-center overflow-hidden">
-            <video
-              ref={videoRef}
-              muted
-              loop
-              playsInline
-              preload="auto"
-              className="w-full h-full object-contain"
-              style={{
-                aspectRatio: "768/960",
-                mixBlendMode: "multiply",
-              }}
-            >
-              <source src="/hero/hero.webm" type="video/webm" />
-              <source src="/hero/hero.mp4" type="video/mp4" />
-            </video>
-          </div>
+          {isAutoplayBlocked && (
+            <span className="absolute -inset-1 rounded-full border-2 border-[var(--ink)] animate-ping opacity-60 pointer-events-none" />
+          )}
+        </button>
+      </div>
 
-          {/* 4. 46px Round Solid Ink Sound Control Button */}
-          <button
-            onClick={toggleSound}
-            aria-label={isPlayingSound ? "Mute audio" : "Play audio with voice introduction"}
-            className="absolute bottom-2 right-4 sm:bottom-4 sm:right-6 w-[46px] h-[46px] rounded-full bg-[var(--ink)] text-[var(--paper)] shadow-lg flex items-center justify-center hover:scale-105 active:scale-95 transition-all cursor-pointer z-20 group"
+      {/* 3. Centered 3D Talking Character Video Stage */}
+      <div className="relative w-full max-w-[480px] sm:max-w-[520px] md:max-w-[560px] h-[58vh] sm:h-[64vh] md:h-[68vh] mx-auto flex items-center justify-center my-auto z-10">
+        <div className="relative w-full h-full mix-blend-multiply flex items-center justify-center overflow-hidden">
+          <video
+            ref={videoRef}
+            muted
+            loop
+            playsInline
+            preload="auto"
+            className="w-full h-full object-contain"
+            style={{
+              aspectRatio: "768/960",
+              mixBlendMode: "multiply",
+            }}
           >
-            {/* Show ▶ when sound is off, ❚❚ when sound is on */}
-            {isPlayingSound ? (
-              <span className="flex items-center gap-[3px] h-3.5">
-                <span className="w-[3px] h-3.5 bg-[var(--paper)] rounded-full animate-bounce [animation-delay:-0.3s]" />
-                <span className="w-[3px] h-3.5 bg-[var(--paper)] rounded-full animate-bounce [animation-delay:-0.15s]" />
-                <span className="w-[3px] h-3.5 bg-[var(--paper)] rounded-full animate-bounce" />
-              </span>
-            ) : (
-              <svg className="w-4 h-4 fill-current ml-0.5" viewBox="0 0 24 24">
-                <path d="M8 5v14l11-7z" />
-              </svg>
-            )}
-
-            {/* Soft ping ring when autoplay is blocked */}
-            {isAutoplayBlocked && (
-              <span className="absolute -inset-1 rounded-full border-2 border-[var(--ink)] animate-ping opacity-60 pointer-events-none" />
-            )}
-          </button>
+            <source src="/hero/hero.webm" type="video/webm" />
+            <source src="/hero/hero.mp4" type="video/mp4" />
+          </video>
         </div>
+      </div>
 
-        {/* 5. Role Heading from Resume + CTAs */}
-        <div className="max-w-3xl mx-auto mt-2 space-y-4">
-          <h1 className="text-3xl sm:text-5xl md:text-6xl font-normal tracking-tight text-[var(--ink)] leading-[1.12]">
-            Electronics & <span className="font-serif-italic">Embedded</span> Systems Engineer
+      {/* 4. Bottom Row: Left Headlines + Right Buttons (Exact Reel Layout frame_01_2.0s.jpg) */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-20 flex flex-col md:flex-row md:items-end justify-between gap-6 pt-4">
+        {/* Bottom-Left: Role Headline */}
+        <div className="space-y-1.5 max-w-xl text-left">
+          <span className="font-mono text-xs uppercase tracking-wider text-[var(--mute)] block">
+            {PROFILE.name}
+          </span>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[var(--ink)] leading-[1.08]">
+            Electronics & <span className="font-serif italic font-normal text-[var(--mute)]">Embedded</span> Systems Engineer.
           </h1>
-
-          <p className="text-sm sm:text-base md:text-lg text-[var(--mute)] leading-relaxed max-w-2xl mx-auto font-normal">
-            Specialized in railway signaling (ERTMS / CBTC GoA4), complex PLM enterprise configuration,
-            and safety-critical embedded software architectures.
+          <p className="text-xs sm:text-sm text-[var(--mute)] font-normal pt-1">
+            Specialized in mission-critical railway signaling, automated PLM workflows, and intelligent embedded architectures.
           </p>
         </div>
 
-        {/* CTAs */}
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+        {/* Bottom-Right: 3 CTAs Cluster */}
+        <div className="flex flex-wrap items-center gap-2.5 self-start md:self-end shrink-0">
           <button
             onClick={() => scrollToSection("work")}
-            className="px-6 py-3 rounded-full bg-[var(--ink)] text-[var(--paper)] text-sm font-medium hover:bg-[var(--ink-2)] transition-all cursor-pointer shadow-xs"
+            className="px-6 py-3 rounded-full bg-[var(--ink)] text-[var(--paper)] text-xs font-mono font-medium hover:bg-[var(--ink-2)] transition-all cursor-pointer shadow-xs"
           >
-            Explore Selected Work ↓
+            Explore work →
+          </button>
+
+          <button
+            onClick={() => scrollToSection("contact")}
+            className="px-5 py-3 rounded-full bg-[var(--card)] border border-[var(--line)] text-xs font-mono font-medium text-[var(--ink)] hover:border-[var(--ink)] hover:bg-[var(--soft)] transition-all cursor-pointer"
+          >
+            Let&apos;s talk
           </button>
 
           <a
             href="/resume.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            className="px-5 py-3 rounded-full bg-[var(--card)] border border-[var(--line)] text-sm font-medium text-[var(--ink)] hover:bg-[var(--soft)] hover:border-[var(--ink)] transition-all flex items-center gap-2"
+            className="px-5 py-3 rounded-full bg-[var(--card)] border border-[var(--line)] text-xs font-mono font-medium text-[var(--ink)] hover:border-[var(--ink)] hover:bg-[var(--soft)] transition-all flex items-center gap-1.5"
           >
-            <span>Read Résumé (PDF)</span>
+            <span>Resume</span>
             <span className="font-mono text-xs opacity-60">↓</span>
           </a>
-
-          <button
-            onClick={() => scrollToSection("contact")}
-            className="px-5 py-3 rounded-full bg-transparent border border-[var(--line)] text-sm font-medium text-[var(--ink-2)] hover:text-[var(--ink)] hover:border-[var(--ink)] transition-all cursor-pointer"
-          >
-            Let&apos;s talk
-          </button>
-        </div>
-      </div>
-
-      {/* Bottom Proof Strip */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full mt-12 pt-6 border-t border-[var(--line)]">
-        <div className="flex flex-wrap items-center justify-between gap-4 text-xs font-mono text-[var(--mute)]">
-          <div className="flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-[var(--ink)]" />
-            <span className="text-[var(--ink)] font-medium">CORE CREDENTIALS:</span>
-            <span>Alstom CBTC GoA4 • RER NG Commissioning</span>
-          </div>
-          <div className="hidden md:flex items-center gap-6">
-            <span>• Renault ECU Cybersecurity (ISO 26262)</span>
-            <span>• Embedded C/C++ & FreeRTOS</span>
-            <span>• DOORS DXL Traceability</span>
-          </div>
-          <div className="text-[var(--ink-2)] font-mono">
-            PARIS • ESIGELEC / POLYTECH SORBONNE
-          </div>
         </div>
       </div>
     </section>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ACHIEVEMENTS, AchievementItem } from "@/lib/data";
+import { ACHIEVEMENTS } from "@/lib/data";
 
 function CountUpNumber({
   target,
@@ -35,7 +35,7 @@ function CountUpNumber({
     if (!started) return;
 
     let startTime: number | null = null;
-    const duration = 1600; // ms
+    const duration = 1400; // ms (Spec: 1.4s)
 
     const easeOutQuart = (x: number): number => 1 - Math.pow(1 - x, 4);
 
@@ -68,13 +68,13 @@ export default function Achievements() {
 
   const scrollLeft = () => {
     if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: -360, behavior: "smooth" });
+      scrollContainerRef.current.scrollBy({ left: -380, behavior: "smooth" });
     }
   };
 
   const scrollRight = () => {
     if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: 360, behavior: "smooth" });
+      scrollContainerRef.current.scrollBy({ left: 380, behavior: "smooth" });
     }
   };
 
@@ -82,21 +82,22 @@ export default function Achievements() {
     <section id="achievements" className="py-24 border-t border-[var(--line)] bg-[var(--paper)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="flex items-center gap-3 mb-8">
+        <div className="flex items-center gap-3 mb-6">
           <span className="font-mono text-xs text-[var(--mute)]">06 //</span>
           <span className="font-mono text-xs uppercase tracking-widest text-[var(--ink)]">
-            Impact & Quantifiable Metrics
+            Achievements
           </span>
           <div className="flex-1 h-[1px] bg-[var(--line)]" />
         </div>
 
+        {/* Heading Matching Reel frame_14_28.0s.jpg: Proud moments. */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-normal tracking-tight text-[var(--ink)]">
-              Pinned Horizontal <span className="font-serif-italic">Impact</span>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[var(--ink)] leading-tight">
+              Proud <span className="font-serif italic font-normal text-[var(--mute)]">moments.</span>
             </h2>
-            <p className="text-sm sm:text-base text-[var(--mute)] mt-2 max-w-xl">
-              Concrete operational outcomes achieved across industrial railway programs,
+            <p className="text-sm sm:text-base text-[var(--mute)] mt-3 max-w-xl font-normal">
+              Quantifiable operational outcomes achieved across industrial railway programs,
               continuous testing environments, and multi-tier configuration baselines.
             </p>
           </div>
@@ -129,19 +130,19 @@ export default function Achievements() {
           {ACHIEVEMENTS.map((item) => (
             <div
               key={item.index}
-              className="min-w-[280px] sm:min-w-[340px] md:min-w-[380px] snap-start rounded-2xl bg-[var(--card)] border border-[var(--line)] p-6 sm:p-8 flex flex-col justify-between shadow-xs hover:border-[var(--ink)] hover:-translate-y-2 hover:shadow-lg transition-all duration-300"
+              className="min-w-[300px] sm:min-w-[360px] md:min-w-[420px] snap-start rounded-3xl bg-[var(--card)] border border-[var(--line)] p-7 sm:p-8 flex flex-col justify-between shadow-xs hover:border-[var(--ink)] hover:-translate-y-2 hover:shadow-xl transition-all duration-300"
             >
-              {/* Card Header */}
+              {/* Card Header: Platform Tag + Index */}
               <div className="flex items-center justify-between border-b border-[var(--line)] pb-4 mb-6">
                 <span className="font-mono text-xs text-[var(--mute)]">
                   {item.index}
                 </span>
-                <span className="px-2.5 py-0.5 rounded-full bg-[var(--paper)] border border-[var(--line)] font-mono text-[10px] text-[var(--ink-2)]">
+                <span className="px-3 py-1 rounded-full bg-[var(--paper)] border border-[var(--line)] font-mono text-[10px] text-[var(--ink)] font-medium">
                   {item.platform}
                 </span>
               </div>
 
-              {/* Number Count-Up */}
+              {/* Number Count-Up (Large font on bottom right) */}
               <div className="space-y-2 my-auto py-4">
                 <div className="text-5xl sm:text-6xl text-[var(--ink)]">
                   <CountUpNumber
@@ -149,7 +150,7 @@ export default function Achievements() {
                     suffix={item.suffix}
                   />
                 </div>
-                <h3 className="text-lg font-semibold text-[var(--ink)] leading-snug">
+                <h3 className="text-xl font-bold text-[var(--ink)] leading-snug">
                   {item.label}
                 </h3>
                 <span className="font-mono text-xs text-[var(--mute)] block">
