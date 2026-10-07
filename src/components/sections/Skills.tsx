@@ -12,18 +12,39 @@ const FAMILIES: Array<SkillItem["family"] | "All"> = [
   "DevOps & Tools",
 ];
 
+// Tonal color mapping matching the authentic periodic table in the Instagram reel
+// Languages: deep graphite slate | Systems & Hardware: warm stone medium | PLM: lighter stone | DevOps: paper stone
+const FAMILY_DEFAULT_STYLES: Record<SkillItem["family"], { bg: string; text: string; dot: string }> = {
+  Languages: {
+    bg: "bg-[#2b2a28] hover:bg-[#0d0d0d]",
+    text: "text-[#f4f2ee]",
+    dot: "bg-blue-400",
+  },
+  "Systems & Hardware": {
+    bg: "bg-[#cfc9bf] hover:bg-[#0d0d0d]",
+    text: "text-[#1a1917]",
+    dot: "bg-emerald-500",
+  },
+  "PLM & Configuration": {
+    bg: "bg-[#ded8ce] hover:bg-[#0d0d0d]",
+    text: "text-[#22211f]",
+    dot: "bg-amber-500",
+  },
+  "DevOps & Tools": {
+    bg: "bg-[#eae5dc] hover:bg-[#0d0d0d]",
+    text: "text-[#2d2b27]",
+    dot: "bg-purple-500",
+  },
+};
+
 export default function Skills() {
   const [selectedFamily, setSelectedFamily] = useState<SkillItem["family"] | "All">("All");
-  const [hoveredSkill, setHoveredSkill] = useState<SkillItem | null>(SKILL_GROUPS[0]);
-
-  const handleTileEnter = (skill: SkillItem) => {
-    setHoveredSkill(skill);
-  };
+  const [hoveredSkill, setHoveredSkill] = useState<SkillItem | null>(null);
 
   return (
     <section id="skills" className="py-24 border-t border-[var(--line)] bg-[var(--paper)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
+        {/* Section Tag */}
         <div className="flex items-center gap-3 mb-6">
           <span className="font-mono text-xs text-[var(--mute)]">02 //</span>
           <span className="font-mono text-xs uppercase tracking-widest text-[var(--ink)]">
@@ -32,7 +53,7 @@ export default function Skills() {
           <div className="flex-1 h-[1px] bg-[var(--line)]" />
         </div>
 
-        {/* Title Matching Reel: "The periodic table of my stack." */}
+        {/* Title Matching Reel Exactly: "The periodic table of my stack." */}
         <div className="mb-8">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[var(--ink)] leading-tight">
             The periodic table <span className="font-serif italic font-normal text-[var(--mute)]">of my stack.</span>
@@ -41,7 +62,7 @@ export default function Skills() {
             32 elements in four families. Hover a tile to see its logo, or pick a family to light it up.
           </p>
 
-          {/* Family Filter Chips in a Row */}
+          {/* Family Filter Chips Matching Reel */}
           <div className="flex flex-wrap items-center gap-2 mt-6">
             {FAMILIES.map((family) => {
               const isSelected = selectedFamily === family;
@@ -51,8 +72,8 @@ export default function Skills() {
                   onClick={() => setSelectedFamily(isSelected && family !== "All" ? "All" : family)}
                   className={`px-3.5 py-1.5 rounded-full text-xs font-mono transition-all flex items-center gap-2 cursor-pointer border ${
                     isSelected
-                      ? "bg-[var(--ink)] text-[var(--paper)] border-[var(--ink)] shadow-xs font-medium"
-                      : "bg-[var(--card)] text-[var(--ink-2)] border-[var(--line)] hover:border-[var(--ink)] hover:bg-[var(--soft)]"
+                      ? "bg-[#0d0d0d] text-[#ffffff] border-[#0d0d0d] shadow-sm font-medium"
+                      : "bg-[#ffffff] text-[var(--ink-2)] border-[var(--line)] hover:border-[var(--ink)] hover:bg-[var(--soft)]"
                   }`}
                 >
                   {family !== "All" && (
@@ -75,57 +96,65 @@ export default function Skills() {
           </div>
         </div>
 
-        {/* Grid + Sticky Inspector (Matching Exact Reel Layout) */}
+        {/* Grid + Sticky Inspector (Matching Reel frame_06 to frame_08) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Periodic Table Grid (8 Columns on Large Screens) */}
+          {/* Periodic Table Grid (8 Columns Desktop, 4 Columns Mobile) */}
           <div className="lg:col-span-8">
             <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 gap-2">
               {SKILL_GROUPS.map((item, idx) => {
-                const matchesFamily = selectedFamily === "All" || item.family === selectedFamily;
+                const familyStyle = FAMILY_DEFAULT_STYLES[item.family];
+                const matchesFilter = selectedFamily === "All" || item.family === selectedFamily;
                 const isHovered = hoveredSkill?.number === item.number;
+                const isFilterActive = selectedFamily !== "All";
+
+                // Styling logic matching the Instagram reel:
+                // 1. If hovered: solid black, white text, scaled up, elevated
+                // 2. If filtered and matches: solid black, white text
+                // 3. If filtered and doesn't match: dimmed down (opacity 25%)
+                // 4. If no filter ("All"): authentic tonal shading by family!
+                let tileClass = "aspect-square rounded-2xl p-2.5 flex flex-col justify-between text-left transition-all duration-300 cursor-pointer relative group ";
+
+                if (isHovered) {
+                  tileClass += "bg-[#0d0d0d] text-white shadow-xl scale-[1.05] ring-2 ring-black z-20";
+                } else if (isFilterActive) {
+                  if (matchesFilter) {
+                    tileClass += "bg-[#0d0d0d] text-white shadow-sm hover:scale-[1.04]";
+                  } else {
+                    tileClass += "bg-[#e8e4db] text-zinc-400 opacity-25 hover:opacity-100 hover:bg-[#0d0d0d] hover:text-white border border-transparent";
+                  }
+                } else {
+                  // Default state ("All"): Tonal family palette from reel
+                  tileClass += `${familyStyle.bg} ${familyStyle.text} shadow-xs hover:text-white hover:scale-[1.04] hover:shadow-md`;
+                }
 
                 return (
                   <button
                     key={`${item.number}-${item.symbol}`}
-                    onMouseEnter={() => handleTileEnter(item)}
-                    onClick={() => handleTileEnter(item)}
-                    className={`aspect-square rounded-2xl p-2.5 flex flex-col justify-between text-left transition-all duration-300 cursor-pointer relative group ${
-                      matchesFamily
-                        ? isHovered
-                          ? "bg-[#0d0d0d] text-white shadow-xl scale-[1.05] ring-2 ring-black z-10"
-                          : "bg-[#0d0d0d] text-white shadow-sm hover:scale-[1.03] hover:shadow-md"
-                        : "bg-zinc-200/50 text-zinc-400 opacity-30 hover:opacity-100 hover:bg-[#0d0d0d] hover:text-white border border-transparent"
-                    }`}
+                    onMouseEnter={() => setHoveredSkill(item)}
+                    onFocus={() => setHoveredSkill(item)}
+                    onClick={() => setHoveredSkill(item)}
+                    className={tileClass}
                     style={{
-                      transitionDelay: matchesFamily ? `${(idx % 8) * 15}ms` : "0ms",
+                      transitionDelay: isFilterActive && matchesFilter ? `${(idx % 8) * 20}ms` : "0ms",
                     }}
                   >
-                    {/* Top Row: Atomic Number */}
+                    {/* Top Row: Atomic Number + Family Dot */}
                     <div className="flex items-center justify-between w-full">
-                      <span className="font-mono text-[9px] opacity-75">
+                      <span className={`font-mono text-[9px] ${isHovered || (isFilterActive && matchesFilter) || item.family === 'Languages' ? 'opacity-70 text-white' : 'opacity-70 text-[var(--ink)]'}`}>
                         {String(item.number).padStart(2, "0")}
                       </span>
-                      {/* Family Dot */}
                       <span
-                        className={`w-1 h-1 rounded-full ${
-                          item.family === "Languages"
-                            ? "bg-blue-400"
-                            : item.family === "Systems & Hardware"
-                            ? "bg-emerald-400"
-                            : item.family === "PLM & Configuration"
-                            ? "bg-amber-400"
-                            : "bg-purple-400"
-                        }`}
+                        className={`w-1 h-1 rounded-full ${familyStyle.dot}`}
                       />
                     </div>
 
-                    {/* Chemical Symbol */}
-                    <div className="font-mono text-lg sm:text-xl font-bold tracking-tight text-center my-auto">
+                    {/* Chemical Symbol (2-3 chars, bold display) */}
+                    <div className="font-mono text-lg sm:text-xl font-bold tracking-tight text-center my-auto transition-transform group-hover:scale-105">
                       {item.symbol}
                     </div>
 
                     {/* Element Full Name */}
-                    <div className="text-[9px] font-medium truncate w-full opacity-85 text-center">
+                    <div className="text-[9px] font-medium truncate w-full text-center opacity-85">
                       {item.name}
                     </div>
                   </button>
@@ -133,7 +162,7 @@ export default function Skills() {
               })}
             </div>
 
-            {/* Quick Family Indicators */}
+            {/* Quick Family Legend */}
             <div className="mt-6 pt-4 border-t border-[var(--line)] flex flex-wrap items-center gap-6 text-[11px] font-mono text-[var(--mute)]">
               <span className="text-[var(--ink)] font-semibold">FAMILIES:</span>
               <span className="flex items-center gap-1.5">
@@ -151,7 +180,7 @@ export default function Skills() {
             </div>
           </div>
 
-          {/* Sticky Inspector Panel (320px Wide, with Official TechLogo at 140px & Pop Animation) */}
+          {/* Sticky Inspector Panel (320px Wide Desktop, Matching Reel frame_07 and frame_08) */}
           <div className="lg:col-span-4 sticky top-28">
             <div className="p-6 rounded-3xl bg-[var(--card)] border border-[var(--line)] shadow-sm space-y-6 min-h-[460px] flex flex-col justify-between">
               {hoveredSkill ? (
@@ -172,7 +201,7 @@ export default function Skills() {
                     <div className="absolute inset-0 max-w-[160px] max-h-[160px] m-auto rounded-full bg-zinc-200/60 blur-2xl -z-10" />
 
                     {/* Official TechLogo */}
-                    <div className="transition-transform duration-300 hover:scale-105 animate-in zoom-in-95 duration-200">
+                    <div className="transition-transform duration-300 hover:scale-105">
                       <TechLogo
                         name={hoveredSkill.name}
                         symbol={hoveredSkill.symbol}
@@ -180,57 +209,59 @@ export default function Skills() {
                       />
                     </div>
 
-                    <h3 className="text-2xl font-bold text-[var(--ink)] mt-4 tracking-tight">
+                    <h3 className="mt-5 text-xl font-bold tracking-tight text-[var(--ink)] text-center">
                       {hoveredSkill.name}
                     </h3>
-
-                    <div className="flex items-center gap-2 mt-1.5">
-                      <span className="px-2.5 py-0.5 rounded-full bg-[var(--paper)] border border-[var(--line)] text-[10px] font-mono text-[var(--ink-2)]">
-                        {hoveredSkill.family}
-                      </span>
-                      <span className="px-2.5 py-0.5 rounded-full bg-[var(--ink)] text-[var(--paper)] text-[10px] font-mono font-medium">
-                        {hoveredSkill.level}
-                      </span>
+                    <div className="inline-flex items-center gap-1.5 mt-1 px-2.5 py-0.5 rounded-full bg-[var(--soft)] text-[10px] font-mono text-[var(--ink-2)]">
+                      <span
+                        className={`w-1.5 h-1.5 rounded-full ${
+                          FAMILY_DEFAULT_STYLES[hoveredSkill.family].dot
+                        }`}
+                      />
+                      {hoveredSkill.family}
                     </div>
                   </div>
 
-                  {/* Description of Application */}
-                  <div className="space-y-1.5">
-                    <span className="font-mono text-[9px] uppercase tracking-wider text-[var(--mute)] block">
-                      Production Context
-                    </span>
-                    <p className="text-xs text-[var(--ink-2)] leading-relaxed">
-                      {hoveredSkill.description}
-                    </p>
+                  {/* Description from CV */}
+                  <div className="space-y-3 border-t border-[var(--line)] pt-4 text-xs text-[var(--mute)] leading-relaxed">
+                    <p>{hoveredSkill.description}</p>
                   </div>
 
-                  {/* Associated Deployments */}
-                  {hoveredSkill.projects && hoveredSkill.projects.length > 0 && (
-                    <div className="space-y-1.5 pt-3 border-t border-[var(--line)]">
-                      <span className="font-mono text-[9px] uppercase tracking-wider text-[var(--mute)] block">
-                        Verified Deployments
+                  {/* Projects using this skill */}
+                  {hoveredSkill.projects.length > 0 && (
+                    <div className="border-t border-[var(--line)] pt-3">
+                      <span className="font-mono text-[9px] uppercase tracking-wider text-[var(--mute)] block mb-2">
+                        Applied in Projects
                       </span>
-                      <div className="flex flex-col gap-1">
+                      <div className="flex flex-wrap gap-1.5">
                         {hoveredSkill.projects.map((proj) => (
-                          <div
+                          <span
                             key={proj}
-                            className="px-2.5 py-1.5 rounded-lg bg-[var(--paper)] border border-[var(--line)] text-xs text-[var(--ink)] font-medium flex items-center justify-between"
+                            className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-[var(--paper)] text-[var(--ink-2)] border border-[var(--line)]"
                           >
-                            <span className="truncate">{proj}</span>
-                            <span className="font-mono text-[9px] text-[var(--mute)]">✓</span>
-                          </div>
+                            {proj}
+                          </span>
                         ))}
                       </div>
                     </div>
                   )}
                 </>
               ) : (
-                /* Empty state from Reel */
-                <div className="my-auto text-center space-y-2 py-12">
-                  <span className="font-mono text-3xl block opacity-40">↖</span>
-                  <p className="font-mono text-xs text-[var(--mute)]">
-                    Hover any element to see its logo
-                  </p>
+                /* Empty Default State matching Reel frame_08_16.0s.jpg: "Hover any element to see its logo" */
+                <div className="flex-1 flex flex-col items-center justify-center text-center p-8 space-y-4">
+                  <div className="w-14 h-14 rounded-2xl bg-[var(--paper)] border border-[var(--line)] flex items-center justify-center text-[var(--mute)]">
+                    <svg className="w-6 h-6 stroke-current stroke-2 fill-none" viewBox="0 0 24 24">
+                      <path d="M7 17L17 7M7 7h10v10" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-[var(--ink)]">
+                      ↖ Hover any element to see its logo
+                    </p>
+                    <p className="text-xs text-[var(--mute)] mt-1 max-w-[200px] mx-auto">
+                      Explore 32 technologies, standards & tools across embedded railway engineering.
+                    </p>
+                  </div>
                 </div>
               )}
             </div>

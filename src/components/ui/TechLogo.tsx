@@ -8,7 +8,7 @@ interface TechLogoProps {
   className?: string;
 }
 
-export default function TechLogo({ name, symbol, className = "w-28 h-28" }: TechLogoProps) {
+export default function TechLogo({ name, symbol, className = "w-32 h-32" }: TechLogoProps) {
   switch (symbol) {
     case "Py":
       return (
@@ -37,14 +37,8 @@ export default function TechLogo({ name, symbol, className = "w-28 h-28" }: Tech
     case "Cp":
       return (
         <svg className={className} viewBox="0 0 128 128">
-          <path
-            d="M64 5.3 14 34.2v57.8l50 28.9 50-28.9V34.2L64 5.3z"
-            fill="#00599C"
-          />
-          <path
-            d="M64 16.8l39.9 23v46.2L64 109.2 24.1 86V39.8L64 16.8z"
-            fill="#004482"
-          />
+          <path d="M64 5.3 14 34.2v57.8l50 28.9 50-28.9V34.2L64 5.3z" fill="#00599C" />
+          <path d="M64 16.8l39.9 23v46.2L64 109.2 24.1 86V39.8L64 16.8z" fill="#004482" />
           <path
             d="M75 50.8c-2.4-5-6.3-9.1-11.2-11.8s-10.5-3.7-16.1-3.2c-5.6.5-10.9 3-15.2 7.1s-7.1 9.4-8.1 15.1c-1 5.7.3 11.6 3.5 16.5s8 8.8 13.5 10.9c5.6 2 11.7 2.1 17.4.2s10.5-5.6 13.7-10.6l-10.4-5.7c-2.1 3.2-5.2 5.6-8.9 6.8-3.7 1.2-7.6 1.1-11.2-.2-3.6-1.3-6.6-3.8-8.7-7-2-3.2-2.9-7-2.3-10.7s2.5-7.2 5.3-9.8c2.8-2.6 6.3-4.2 10-4.5 3.7-.3 7.3.7 10.4 2.8 3.1 2.1 5.6 5.1 7.2 8.6L75 50.8z"
             fill="#ffffff"
@@ -61,7 +55,7 @@ export default function TechLogo({ name, symbol, className = "w-28 h-28" }: Tech
         <svg className={className} viewBox="0 0 128 128">
           <rect width="128" height="128" rx="28" fill="#03234B" />
           <path
-            d="M28 42h40c8 0 14 5 14 12s-6 12-14 12H44v20H28V42zm16 12v12h24c3 0 5-2 5-6s-2-6-5-6H44z"
+            d="M28 40h42c9 0 16 6 16 14s-7 14-16 14H46v24H28V40zm18 14v14h24c4 0 7-3 7-7s-3-7-7-7H46z"
             fill="#00B2A9"
           />
           <text
@@ -120,7 +114,7 @@ export default function TechLogo({ name, symbol, className = "w-28 h-28" }: Tech
     case "Lx":
       return (
         <svg className={className} viewBox="0 0 128 128">
-          <circle cx="64" cy="64" r="60" fill="#FCC624" />
+          <circle cx="64" cy="64" r="58" fill="#FCC624" />
           <path
             d="M64 18c-14 0-25 11-25 25 0 8 3 15 9 20-1 4-3 10-5 15-3 8-7 14-7 19 0 9 13 14 28 14s28-5 28-14c0-5-4-11-7-19-2-5-4-11-5-15 6-5 9-12 9-20 0-14-11-25-25-25z"
             fill="#000000"
@@ -138,7 +132,6 @@ export default function TechLogo({ name, symbol, className = "w-28 h-28" }: Tech
       return (
         <svg className={className} viewBox="0 0 128 128">
           <rect width="128" height="128" rx="28" fill="#003580" />
-          {/* Railway Signal Interlocking Glyph */}
           <path
             d="M32 96h64M44 96l8-64h24l8 64M48 48h32M45 72h38"
             stroke="#ffffff"
@@ -146,6 +139,17 @@ export default function TechLogo({ name, symbol, className = "w-28 h-28" }: Tech
             strokeLinecap="round"
           />
           <circle cx="64" cy="24" r="8" fill="#10B981" />
+          <text
+            x="64"
+            y="116"
+            fontFamily="monospace"
+            fontSize="12"
+            fontWeight="bold"
+            fill="#A6D5FA"
+            textAnchor="middle"
+          >
+            {symbol === "Cb" ? "CBTC GoA4" : "ERTMS L2"}
+          </text>
         </svg>
       );
 
@@ -158,6 +162,17 @@ export default function TechLogo({ name, symbol, className = "w-28 h-28" }: Tech
           <polygon points="64,30 52,64 76,64" fill="#00B2A9" />
           <polygon points="64,98 52,64 76,64" fill="#E24329" />
           <circle cx="64" cy="64" r="6" fill="#ffffff" />
+          <text
+            x="64"
+            y="118"
+            fontFamily="monospace"
+            fontSize="10"
+            fontWeight="bold"
+            fill="#ffffff"
+            textAnchor="middle"
+          >
+            3DEXPERIENCE
+          </text>
         </svg>
       );
 
@@ -202,14 +217,127 @@ export default function TechLogo({ name, symbol, className = "w-28 h-28" }: Tech
             strokeWidth="8"
             strokeLinecap="round"
           />
+          <text
+            x="64"
+            y="108"
+            fontFamily="sans-serif"
+            fontSize="14"
+            fontWeight="bold"
+            fill="#ffffff"
+            textAnchor="middle"
+          >
+            MATLAB
+          </text>
+        </svg>
+      );
+
+    case "Rt":
+      return (
+        <svg className={className} viewBox="0 0 128 128">
+          <rect width="128" height="128" rx="28" fill="#1B4958" />
+          <circle cx="64" cy="64" r="38" stroke="#00C0F3" strokeWidth="6" fill="none" />
+          <path d="M48 64h32M64 48v32" stroke="#ffffff" strokeWidth="5" strokeLinecap="round" />
+          <text
+            x="64"
+            y="114"
+            fontFamily="monospace"
+            fontSize="11"
+            fontWeight="bold"
+            fill="#00C0F3"
+            textAnchor="middle"
+          >
+            FreeRTOS
+          </text>
+        </svg>
+      );
+
+    case "Cn":
+      return (
+        <svg className={className} viewBox="0 0 128 128">
+          <rect width="128" height="128" rx="28" fill="#202A37" />
+          <path
+            d="M28 64h20l12-24 16 48 12-24h12"
+            stroke="#10B981"
+            strokeWidth="5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            fill="none"
+          />
+          <text
+            x="64"
+            y="110"
+            fontFamily="monospace"
+            fontSize="14"
+            fontWeight="bold"
+            fill="#ffffff"
+            textAnchor="middle"
+          >
+            CAN Bus
+          </text>
+        </svg>
+      );
+
+    case "Is":
+      return (
+        <svg className={className} viewBox="0 0 128 128">
+          <rect width="128" height="128" rx="28" fill="#831843" />
+          <polygon
+            points="64,24 96,44 96,84 64,104 32,84 32,44"
+            stroke="#ffffff"
+            strokeWidth="5"
+            fill="none"
+          />
+          <text
+            x="64"
+            y="68"
+            fontFamily="sans-serif"
+            fontSize="14"
+            fontWeight="900"
+            fill="#ffffff"
+            textAnchor="middle"
+          >
+            ISO 26262
+          </text>
+          <text
+            x="64"
+            y="82"
+            fontFamily="monospace"
+            fontSize="9"
+            fontWeight="bold"
+            fill="#FBCFE8"
+            textAnchor="middle"
+          >
+            ASIL-D
+          </text>
+        </svg>
+      );
+
+    case "Pd":
+      return (
+        <svg className={className} viewBox="0 0 128 128">
+          <rect width="128" height="128" rx="28" fill="#150458" />
+          <rect x="42" y="34" width="12" height="60" rx="3" fill="#ffffff" />
+          <rect x="58" y="46" width="12" height="48" rx="3" fill="#E70488" />
+          <rect x="74" y="58" width="12" height="36" rx="3" fill="#FFD43B" />
+          <text
+            x="64"
+            y="114"
+            fontFamily="sans-serif"
+            fontSize="12"
+            fontWeight="bold"
+            fill="#ffffff"
+            textAnchor="middle"
+          >
+            Pandas
+          </text>
         </svg>
       );
 
     default:
       return (
-        <div className={`${className} rounded-2xl bg-[#0d0d0d] text-white flex flex-col items-center justify-center p-3 shadow-md border border-zinc-700`}>
-          <span className="font-mono text-3xl font-bold tracking-tight">{symbol}</span>
-          <span className="font-mono text-[9px] uppercase tracking-wider text-zinc-400 mt-1 truncate max-w-full text-center">
+        <div className={`${className} rounded-3xl bg-[#0d0d0d] text-white flex flex-col items-center justify-center p-4 shadow-xl border border-zinc-700`}>
+          <span className="font-mono text-3xl font-extrabold tracking-tight">{symbol}</span>
+          <span className="font-mono text-[10px] uppercase tracking-wider text-zinc-400 mt-2 truncate max-w-full text-center">
             {name}
           </span>
         </div>
