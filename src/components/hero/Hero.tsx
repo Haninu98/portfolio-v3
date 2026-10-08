@@ -158,8 +158,8 @@ export default function Hero() {
         </button>
       </div>
 
-      {/* 3. Centered 3D Talking Character Video Stage */}
-      <div className="relative w-full max-w-[480px] sm:max-w-[520px] md:max-w-[560px] h-[58vh] sm:h-[64vh] md:h-[68vh] mx-auto flex items-center justify-center my-auto z-10">
+      {/* 3. Centered 3D Talking Character Video Stage (Matching Guide min(96svh, 1040px) / 62svh mobile) */}
+      <div className="relative w-full max-w-[580px] sm:max-w-[640px] md:max-w-[700px] h-[62svh] sm:h-[72svh] md:h-[78svh] mx-auto flex items-center justify-center my-auto z-10 pointer-events-none select-none">
         <div className="relative w-full h-full mix-blend-multiply flex items-center justify-center overflow-hidden">
           <video
             ref={videoRef}

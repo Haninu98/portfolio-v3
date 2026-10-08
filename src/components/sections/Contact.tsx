@@ -17,7 +17,7 @@ export default function Contact() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const hoppingText = "LET'S CONNECT";
+  const hoppingText = "Let's build something together.";
 
   return (
     <section id="contact" className="pt-24 pb-12 border-t border-[var(--line)] bg-[var(--paper)] relative overflow-hidden">
