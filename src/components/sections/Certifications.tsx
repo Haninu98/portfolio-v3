@@ -1,10 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { CERTIFICATIONS, CertificationItem } from "@/lib/data";
+import { getCertifications, CertificationItem } from "@/lib/data";
+import { useLanguage } from "@/lib/LanguageContext";
+import { TRANSLATIONS } from "@/lib/translations";
 
 export default function Certifications() {
   const [selectedCert, setSelectedCert] = useState<CertificationItem | null>(null);
+  const { lang } = useLanguage();
+  const t = TRANSLATIONS[lang];
+  const certifications = getCertifications(lang);
 
   return (
     <section id="certifications" className="py-24 border-t border-[var(--line)] bg-[var(--paper)]">
@@ -13,7 +18,7 @@ export default function Certifications() {
         <div className="flex items-center gap-3 mb-8">
           <span className="font-mono text-xs text-[var(--mute)]">04 //</span>
           <span className="font-mono text-xs uppercase tracking-widest text-[var(--ink)]">
-            Certifications
+            {lang === "fr" ? "Certifications Officielles" : "Certifications"}
           </span>
           <div className="flex-1 h-[1px] bg-[var(--line)]" />
         </div>
@@ -23,17 +28,19 @@ export default function Certifications() {
           {/* Left Sticky Column */}
           <div className="lg:col-span-5 lg:sticky lg:top-28 space-y-4">
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[var(--ink)] leading-tight">
-              Always <span className="font-serif italic font-normal text-[var(--mute)]">learning.</span>
+              {t.certifications.heading}{" "}
+              <span className="font-serif italic font-normal text-[var(--mute)]">
+                {t.certifications.headingAccent}
+              </span>
             </h2>
             <p className="text-sm sm:text-base text-[var(--mute)] max-w-md font-normal leading-relaxed">
-              7 certifications across high-voltage rail safety, systems engineering,
-              quality compliance gates, and data science pipelines.
+              {t.certifications.subtitle}
             </p>
           </div>
 
           {/* Right Column: Ink-Flood Rows List */}
           <div className="lg:col-span-7 divide-y divide-[var(--line)] border-y border-[var(--line)]">
-            {CERTIFICATIONS.map((cert) => (
+            {certifications.map((cert) => (
               <div
                 key={cert.index}
                 onClick={() => setSelectedCert(cert)}
@@ -93,7 +100,7 @@ export default function Certifications() {
           >
             <div className="flex items-center justify-between border-b border-[var(--line)] pb-4">
               <span className="font-mono text-xs text-[var(--mute)]">
-                CREDENTIAL #{selectedCert.index}
+                {t.certifications.modalHeader} #{selectedCert.index}
               </span>
               <button
                 onClick={() => setSelectedCert(null)}
@@ -124,7 +131,7 @@ export default function Certifications() {
                 onClick={() => setSelectedCert(null)}
                 className="px-5 py-2 rounded-full bg-[var(--ink)] text-[var(--paper)] text-xs font-medium hover:bg-[var(--ink-2)] transition-colors cursor-pointer"
               >
-                Close
+                {t.certifications.modalClose}
               </button>
             </div>
           </div>

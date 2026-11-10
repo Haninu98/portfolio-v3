@@ -1,8 +1,14 @@
 "use client";
 
-import { EXPERIENCE } from "@/lib/data";
+import { getExperience } from "@/lib/data";
+import { useLanguage } from "@/lib/LanguageContext";
+import { TRANSLATIONS } from "@/lib/translations";
 
 export default function Experience() {
+  const { lang } = useLanguage();
+  const t = TRANSLATIONS[lang];
+  const experience = getExperience(lang);
+
   return (
     <section id="experience" className="py-24 border-t border-[var(--line)] bg-[var(--paper)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -10,7 +16,7 @@ export default function Experience() {
         <div className="flex items-center gap-3 mb-8">
           <span className="font-mono text-xs text-[var(--mute)]">05 //</span>
           <span className="font-mono text-xs uppercase tracking-widest text-[var(--ink)]">
-            Career & Academic Trajectory
+            {lang === "fr" ? "Parcours & Trajectoire" : "Career & Academic Trajectory"}
           </span>
           <div className="flex-1 h-[1px] bg-[var(--line)]" />
         </div>
@@ -18,20 +24,20 @@ export default function Experience() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
           <div>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-normal tracking-tight text-[var(--ink)]">
-              Unified Vertical <span className="font-serif-italic">Timeline</span>
+              {t.experience.heading}{" "}
+              <span className="font-serif-italic">{t.experience.headingAccent}</span>
             </h2>
             <p className="text-sm sm:text-base text-[var(--mute)] mt-2 max-w-xl">
-              An unbroken progression of industrial apprenticeships, safety engineering roles,
-              and academic degrees across France&apos;s leading institutions.
+              {t.experience.subtitle}
             </p>
           </div>
 
           <div className="flex items-center gap-4 text-xs font-mono text-[var(--mute)]">
             <span className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-[var(--ink)]" /> Industry & Rail
+              <span className="w-2 h-2 rounded-full bg-[var(--ink)]" /> {t.experience.industryLabel}
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-zinc-400" /> Academic & Degrees
+              <span className="w-2 h-2 rounded-full bg-zinc-400" /> {t.experience.academicLabel}
             </span>
           </div>
         </div>
@@ -45,7 +51,7 @@ export default function Experience() {
           />
 
           <div className="space-y-12 sm:space-y-16">
-            {EXPERIENCE.map((item, idx) => {
+            {experience.map((item, idx) => {
               const isEven = idx % 2 === 0;
 
               return (
@@ -108,21 +114,22 @@ export default function Experience() {
 
             <div className="p-6 sm:p-8 rounded-2xl bg-[var(--card)] border border-[var(--line)] max-w-md w-full shadow-sm space-y-3">
               <span className="font-mono text-[10px] uppercase tracking-wider text-[var(--mute)] block">
-                Next Chapter
+                {lang === "fr" ? "Prochain Chapitre" : "Next Chapter"}
               </span>
               <h3 className="text-xl font-normal text-[var(--ink)]">
-                Your Project or Engineering Team?
+                {lang === "fr" ? "Votre projet ou équipe d'ingénierie ?" : "Your Project or Engineering Team?"}
               </h3>
               <p className="text-xs text-[var(--mute)] leading-relaxed">
-                Available for mission-critical railway signaling, embedded systems engineering,
-                or automated PLM configuration roles.
+                {lang === "fr"
+                  ? "Disponible pour des missions en signalisation ferroviaire CBTC, ingénierie des systèmes embarqués critiques ou pilotage de configuration PLM."
+                  : "Available for mission-critical railway signaling, embedded systems engineering, or automated PLM configuration roles."}
               </p>
               <div className="pt-2">
                 <a
                   href="#contact"
                   className="inline-block px-5 py-2.5 rounded-full bg-[var(--ink)] text-[var(--paper)] text-xs font-medium hover:bg-[var(--ink-2)] transition-colors cursor-pointer"
                 >
-                  Initiate Discussion →
+                  {lang === "fr" ? "Échanger ensemble →" : "Initiate Discussion →"}
                 </a>
               </div>
             </div>

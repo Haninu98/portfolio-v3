@@ -747,3 +747,312 @@ export const ACHIEVEMENTS: AchievementItem[] = [
     platform: "Quality"
   }
 ];
+
+export const PROJECTS_FR: ProjectItem[] = [
+  {
+    id: "marseille-metro",
+    index: "01",
+    kicker: "Alstom • Signalisation Ferroviaire",
+    title: "Modernisation de la Signalisation du Métro de Marseille",
+    role: "Project Configuration & Change Manager",
+    period: "2024 — En cours",
+    location: "Paris, France",
+    description: "Gestion de configuration système et sous-systèmes pour le projet d'automatisation CBTC GoA4 du métro de Marseille, synchronisant la validation entre les plateformes d'intégration usine (FIVP) et les équipes sur site (T&C).",
+    features: [
+      "Animation des comités Change Control Board (CCB) et revues de baseline de livraison",
+      "Coordination de l'ingénierie sous-systèmes avec les équipes de validation FIVP et T&C",
+      "Administration et support utilisateur des outils TpPLM, IBM EWM et ClearQuest",
+      "Pipeline d'automatisation Power Query & VBA réduisant l'effort de reporting de 85%"
+    ],
+    tech: ["TpPLM", "IBM EWM", "Rational ClearQuest", "Power Query", "VBA", "CBTC"],
+    github: null,
+    illustrativeType: "signaling_dashboard",
+    impact: "-85% d'effort de reporting KPI récurrent"
+  },
+  {
+    id: "rer-ng",
+    index: "02",
+    kicker: "Alstom • Commissioning sur Voie",
+    title: "Essais et Commissioning sur Voie — Projet RER NG",
+    role: "Chargé de Travaux — Validation Système",
+    period: "2024 — En cours",
+    location: "Île-de-France, France",
+    description: "Validation système sur rames RER NG sur voies actives en tant que Chargé de Travaux, flashage de firmwares d'ECU critiques et dépannage en atelier sous tension caténaire 25 kV / 1,5 kV.",
+    features: [
+      "Validation de sûreté sur voies d'essais en qualité de Chargé de Travaux habilité",
+      "Mises à jour logicielles et flashage d'ECU de sécurité : BCU, TDD, DAD, Net Box",
+      "Maintenance, diagnostic de pannes et manœuvres de garage sous caténaire 25 kV / 1,5 kV",
+      "Coordination des essais dynamiques avec les conducteurs et ingénieurs d'essais"
+    ],
+    tech: ["Safety ECUs", "CAN Bus", "B2V / BR / BC", "Outils de Diagnostic"],
+    github: null,
+    illustrativeType: "train_telemetry",
+    impact: "100% de déploiements logiciels dans les délais"
+  },
+  {
+    id: "renault-cybersecurity",
+    index: "03",
+    kicker: "Renault Group • Automatisation CI/CD",
+    title: "Pipeline CI/CD & Cybersécurité des Calculateurs ECU",
+    role: "Ingénieur Systèmes Embarqués (Alternance)",
+    period: "2020 — 2023",
+    location: "Guyancourt, France",
+    description: "Conception d'un pipeline ETL d'intégration continue automatisé pour extraire et transformer les données JIRA, automatisant le reporting d'audit de cybersécurité des calculateurs automobiles.",
+    features: [
+      "Pipeline GitLab CI/CD automatisé ingérant la télémétrie des anomalies JIRA",
+      "Réduction du cycle d'audit cybersécurité véhicule de 2 semaines à moins de 15 minutes",
+      "Traitement de données Pandas / Matplotlib et génération de dashboards de direction",
+      "Participation active à l'assurance qualité logicielle (QA) et spécifications techniques"
+    ],
+    tech: ["Python", "Pandas", "GitLab CI/CD", "JIRA REST API", "ISO 26262"],
+    github: null,
+    illustrativeType: "pipeline_status",
+    impact: "Cycles d'audit : 2 semaines → < 15 min"
+  },
+  {
+    id: "doors-traceability",
+    index: "04",
+    kicker: "Renault Group • Ingénierie des Exigences",
+    title: "Suite Modulaire d'Automatisation DXL DOORS",
+    role: "Ingénieur Systèmes Embarqués (Alternance)",
+    period: "2020 — 2023",
+    location: "Guyancourt, France",
+    description: "Optimisation de la gestion des exigences IBM DOORS pour les systèmes électroniques automobiles, garantissant une traçabilité de bout en bout conforme à l'ISO 26262 via des scripts DXL modulaires.",
+    features: [
+      "Suites d'automatisation DXL modulaires pour vérifier les liens et détecter les écarts",
+      "Génération instantanée des matrices de conformité ISO 26262 pour les architectes système",
+      "Formalisation documentaire et création de tutoriels pour les équipes d'ingénierie",
+      "Rétro-ingénierie de code source embarqué legacy pour conformité réglementaire"
+    ],
+    tech: ["IBM DOORS", "Scripts DXL", "ISO 26262", "Gestion des Exigences"],
+    github: null,
+    illustrativeType: "matrix_grid",
+    impact: "100% de conformité aux audits ISO 26262"
+  },
+  {
+    id: "wheelchair-kit",
+    index: "05",
+    kicker: "Polytech Sorbonne • Systèmes Embarqués",
+    title: "Kit de Motorisation de Fauteuil Roulant Électrique",
+    role: "Responsable Matériel & Firmware",
+    period: "2022 — 2023",
+    location: "Paris, France",
+    description: "Conception et prototypage d'un kit de motorisation embarqué pour fauteuil roulant manuel avec microcontrôleur Arduino, télémétrie BMS et analyse de sûreté de fonctionnement AMDEC.",
+    features: [
+      "Firmware embarqué Arduino avec régulation de vitesse moteur PID",
+      "Télémétrie Battery Management System (BMS) et relais de coupure d'urgence",
+      "Matrice de maîtrise des risques AMDEC / FMEA conforme aux normes d'accessibilité",
+      "Validation sur banc d'essai physique avec 99% de fiabilité de signal"
+    ],
+    tech: ["Arduino", "C Embarqué", "BMS", "AMDEC / FMEA", "SolidWorks"],
+    github: null,
+    illustrativeType: "hardware_board",
+    impact: "99% de fiabilité télémétrique & sûreté ISO"
+  },
+  {
+    id: "iot-beehive",
+    index: "06",
+    kicker: "Polytech Sorbonne • IoT & Télémétrie",
+    title: "Système IoT de Ruche Connectée & Télémétrie",
+    role: "Ingénieur Systèmes IoT",
+    period: "2021 — 2022",
+    location: "Paris, France",
+    description: "Développement d'une station autonome solaire de surveillance environnementale mesurant le poids, la température et l'humidité, transmettant les données sans fil vers une base de données cloud.",
+    features: [
+      "Intégration multi-capteurs (jauge HX711, température / humidité DHT22)",
+      "Architecture basse consommation avec gestion d'énergie solaire et batterie",
+      "Transmission sans fil des mesures environnementales en temps réel",
+      "Traitement et affichage des courbes télémétriques pour suivi apicole"
+    ],
+    tech: ["ESP32", "C++", "Capteurs IoT", "FreeRTOS", "Cloud Telemetry"],
+    github: null,
+    illustrativeType: "sensor_graph",
+    impact: "Surveillance temps réel 24/7 & autonomie totale"
+  }
+];
+
+export const CERTIFICATIONS_FR: CertificationItem[] = [
+  {
+    index: "01",
+    title: "Habilitation Électrique BT / HT (B2V, BR, BC)",
+    issuer: "Temis Formation",
+    date: "2024",
+    badge: "Sécurité & Ferroviaire",
+    details: "Habilitation officielle de sécurité électrique basse et haute tension pour environnements ferroviaires industriels sous caténaire 25 kV / 1,5 kV."
+  },
+  {
+    index: "02",
+    title: "TOEIC for Engineer — Niveau C1",
+    issuer: "IELTS Malta",
+    date: "2023",
+    badge: "Langue & International",
+    details: "Attestation internationale de maîtrise de l'anglais technique et managérial pour ingénieurs, certifiée après séjour d'immersion à Malte. Coordination internationale au quotidien."
+  },
+  {
+    index: "03",
+    title: "Ingénierie des Systèmes Ferroviaires (Railway Systems)",
+    issuer: "Alstom University",
+    date: "2024",
+    badge: "Signalisation Ferroviaire",
+    details: "Formation complète aux principes de signalisation ferroviaire, architecture CBTC, enclenchements et systèmes d'automatismes de trains sécuritaires (fail-safe)."
+  },
+  {
+    index: "04",
+    title: "APSYS pour les Projets (Alstom Production System)",
+    issuer: "Alstom University",
+    date: "2024",
+    badge: "Opérations & Méthodes",
+    details: "Méthodologie Alstom Production System appliquée au pilotage de projet : standardisation, amélioration continue, synchronisation des jalons et élimination des gaspillages."
+  },
+  {
+    index: "05",
+    title: "DFQ Projets & Programmes (Design For Quality)",
+    issuer: "Alstom University",
+    date: "2024",
+    badge: "Qualité & Conformité",
+    details: "Méthodologie Design For Quality : revues de jalons qualité, anticipation des risques projet, matrices de conformité et validation des livrables."
+  },
+  {
+    index: "06",
+    title: "Éthique, Déontologie & Conformité",
+    issuer: "Alstom University",
+    date: "2024",
+    badge: "Gouvernance",
+    details: "Conformité réglementaire d'entreprise, déontologie des affaires, intégrité et respect des protocoles stricts de gouvernance industrielle."
+  },
+  {
+    index: "07",
+    title: "Bootcamp Python Data Science & Machine Learning",
+    issuer: "Certification Udemy",
+    date: "2023",
+    badge: "Data Science & IA",
+    details: "Traitement Big Data (PySpark), calcul numérique vectorisé (NumPy), manipulation de données (Pandas), visualisation (Plotly, Seaborn) et algorithmes de machine learning."
+  }
+];
+
+export const EXPERIENCE_FR: TimelineItem[] = [
+  {
+    year: "2024 — En cours",
+    title: "Project Configuration & Change Manager",
+    organization: "Alstom",
+    location: "Paris, France",
+    type: "experience",
+    badge: "Poste Actuel",
+    detail: "Pilotage de la gestion de configuration pour le projet de modernisation du métro de Marseille en CBTC GoA4. Synchronisation des processus de validation FIVP et T&C, présidence des comités CCB, administration des outils TpPLM/EWM et automatisation des KPI via Power Query et VBA."
+  },
+  {
+    year: "2024 — En cours",
+    title: "Chargé de Travaux — Validation & Commissioning RER NG",
+    organization: "Alstom",
+    location: "Île-de-France, France",
+    type: "experience",
+    badge: "Validation sur Voie",
+    detail: "Validation système sur rames RER NG en essais dynamiques sur voies actives en tant que Chargé de Travaux habilité. Flashage logiciel et mises à jour des calculateurs de sécurité (BCU, TDD, DAD, Net Box) sous caténaire 25 kV / 1,5 kV."
+  },
+  {
+    year: "2020 — 2023",
+    title: "Ingénieur Systèmes Embarqués (Alternance)",
+    organization: "Renault Group",
+    location: "Guyancourt, France",
+    type: "experience",
+    badge: "3 Ans d'Alternance",
+    detail: "Conception de pipelines ETL d'intégration continue sous Python et GitLab CI/CD, réduisant les audits de cybersécurité des calculateurs ECU de 2 semaines à moins de 15 minutes. Développement de scripts DXL sous DOORS assurant 100% de traçabilité ISO 26262."
+  },
+  {
+    year: "2020 — 2023",
+    title: "Diplôme d'Ingénieur — EI2I",
+    organization: "Polytech Sorbonne",
+    location: "Paris, France",
+    type: "education",
+    badge: "Diplôme d'Ingénieur",
+    detail: "Électronique et Informatique Industrielle : Systèmes temps réel (FreeRTOS), IoT et télécommunications, logique numérique FPGA/VHDL, conception objet C/C++, gestion de projet et analyse des risques AMDEC."
+  },
+  {
+    year: "2018 — 2020",
+    title: "Licence EEA (Électronique, Énergie Électrique, Automatique)",
+    organization: "Sorbonne Université",
+    location: "Paris, France",
+    type: "education",
+    badge: "Licence Universitaire",
+    detail: "Électronique analogique et numérique, microfabrication de circuits intégrés en salle blanche (Cadence, PSpice), traitement du signal (FFT, filtrage actif), modélisation MATLAB et robotique autonome."
+  },
+  {
+    year: "2017 — 2018",
+    title: "Stage de Découverte Industrielle",
+    organization: "Sonatrach DRG",
+    location: "Béjaïa, Algérie",
+    type: "experience",
+    badge: "Immersion Industrielle",
+    detail: "Première immersion dans des infrastructures industrielles et pétrochimiques à haute criticité. Maintenance d'équipements de distribution électrique, relais de sécurité et suivi télémétrique SCADA des bacs de stockage."
+  }
+];
+
+export const ACHIEVEMENTS_FR: AchievementItem[] = [
+  {
+    index: "01 / 05",
+    number: "85",
+    suffix: "%",
+    targetValue: 85,
+    label: "Réduction d'effort de reporting",
+    caption: "Alstom • Automatisation des Processus",
+    detail: "Conception de flux automatisés VBA & Power Query consolidant les bases TpPLM et ClearQuest, supprimant les extractions manuelles répétitives.",
+    platform: "Alstom"
+  },
+  {
+    index: "02 / 05",
+    number: "15",
+    suffix: " min",
+    targetValue: 15,
+    label: "Accélération du cycle d'audit",
+    caption: "Renault Group • Réduit de 2 semaines",
+    detail: "Mise en place d'un pipeline ETL d'intégration continue automatisant la vérification de conformité cybersécurité des calculateurs ECU.",
+    platform: "Renault"
+  },
+  {
+    index: "03 / 05",
+    number: "10",
+    suffix: "+",
+    targetValue: 10,
+    label: "Projets industriels & académiques",
+    caption: "Transports & Systèmes Critiques",
+    detail: "Pilotage avec succès de projets d'automatismes ferroviaires, de calculateurs embarqués automobiles et d'architectures matérielles connectées.",
+    platform: "Ingénierie"
+  },
+  {
+    index: "04 / 05",
+    number: "4",
+    suffix: "+ ans",
+    targetValue: 4,
+    label: "Années d'expérience industrielle",
+    caption: "Transports & Hautes Technologies",
+    detail: "Parcours éprouvé au sein des leaders des transports Alstom et Renault Group, maîtrisant l'ensemble du cycle en V des systèmes complexes.",
+    platform: "Parcours"
+  },
+  {
+    index: "05 / 05",
+    number: "100",
+    suffix: "%",
+    targetValue: 100,
+    label: "Conformité aux audits & normes",
+    caption: "ISO 26262 & Standards Ferroviaires",
+    detail: "Zéro non-conformité relevée lors des revues de configuration formelles, validations CCB et audits de sûreté de fonctionnement automobile.",
+    platform: "Qualité"
+  }
+];
+
+export function getProjects(lang: "en" | "fr"): ProjectItem[] {
+  return lang === "fr" ? PROJECTS_FR : PROJECTS;
+}
+
+export function getCertifications(lang: "en" | "fr"): CertificationItem[] {
+  return lang === "fr" ? CERTIFICATIONS_FR : CERTIFICATIONS;
+}
+
+export function getExperience(lang: "en" | "fr"): TimelineItem[] {
+  return lang === "fr" ? EXPERIENCE_FR : EXPERIENCE;
+}
+
+export function getAchievements(lang: "en" | "fr"): AchievementItem[] {
+  return lang === "fr" ? ACHIEVEMENTS_FR : ACHIEVEMENTS;
+}
+

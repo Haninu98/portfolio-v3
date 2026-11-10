@@ -3,6 +3,8 @@
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { PROFILE } from "@/lib/data";
+import { useLanguage } from "@/lib/LanguageContext";
+import { TRANSLATIONS } from "@/lib/translations";
 
 export default function LanyardCard() {
   const [isFlipped, setIsFlipped] = useState(false);
@@ -12,6 +14,8 @@ export default function LanyardCard() {
   const currentAngleRef = useRef(0);
   const targetAngleRef = useRef(0);
   const velocityRef = useRef(0);
+  const { lang } = useLanguage();
+  const t = TRANSLATIONS[lang];
 
   // Physics-based spring-damped pendulum loop
   useEffect(() => {
@@ -137,7 +141,7 @@ export default function LanyardCard() {
                 <div className="flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                   <span className="font-mono text-[9px] font-bold tracking-widest uppercase">
-                    ENGINEER ID
+                    {t.about.badgeTitle}
                   </span>
                 </div>
                 <span className="font-mono text-[9px] tracking-wider text-zinc-400">
@@ -146,17 +150,20 @@ export default function LanyardCard() {
               </div>
             </div>
 
-            {/* Photo frame (Spec: 128x156 frame with gray gradient ring, soft halo, hover zoom) */}
+            {/* Photo frame (Naturally proportioned rounded portrait rectangle matching original reel) */}
             <div className="flex flex-col items-center my-auto">
-              <div className="relative w-[128px] h-[156px] rounded-[16px] p-[3px] bg-gradient-to-b from-zinc-200 via-zinc-400 to-zinc-600 shadow-md group-hover:scale-[1.03] transition-transform duration-300">
-                <div className="relative w-full h-full rounded-[13px] overflow-hidden bg-[#f4f2ee]">
+              <div className="relative w-[130px] h-[155px] rounded-[18px] p-[2px] bg-gradient-to-b from-zinc-200 via-zinc-400 to-zinc-700 shadow-md group-hover:scale-[1.02] transition-transform duration-300">
+                {/* Soft ambient halo */}
+                <div className="absolute inset-0 rounded-[18px] bg-zinc-200/50 blur-lg -z-10" />
+
+                <div className="relative w-full h-full rounded-[16px] overflow-hidden bg-gradient-to-b from-[#ffffff] to-[#f4f2ee] flex items-center justify-center">
                   <Image
                     src="/portrait-bust.webp"
                     alt="Hani IZEM - Engineer Badge Portrait"
                     fill
                     priority
-                    className="object-cover"
-                    sizes="128px"
+                    className="object-cover object-top drop-shadow-xs"
+                    sizes="130px"
                   />
                   {/* Soft highlight glare */}
                   <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent pointer-events-none" />
@@ -169,7 +176,7 @@ export default function LanyardCard() {
                   {PROFILE.name}
                 </h3>
                 <p className="font-mono text-[10px] text-[#77756f] max-w-[240px] leading-tight">
-                  {PROFILE.role}
+                  {lang === "fr" ? "Ingénieur Systèmes Embarqués" : PROFILE.role}
                 </p>
               </div>
 
@@ -177,26 +184,26 @@ export default function LanyardCard() {
               <div className="w-full mt-3 grid grid-cols-3 gap-1 bg-[#f4f2ee] rounded-lg p-2 text-center border border-[rgba(13,13,13,0.06)]">
                 <div>
                   <span className="text-[7.5px] font-mono text-[#77756f] block uppercase">
-                    ID NO.
-                  </span>
-                  <span className="text-[10px] font-mono font-bold text-[#0d0d0d]">
-                    {PROFILE.idCard.idNo}
-                  </span>
-                </div>
-                <div>
-                  <span className="text-[7.5px] font-mono text-[#77756f] block uppercase">
-                    DEPT.
+                    {t.about.badgeDept}
                   </span>
                   <span className="text-[9.5px] font-mono font-semibold text-[#0d0d0d] truncate block">
-                    Rail & PLM
+                    {t.about.badgeDeptVal}
                   </span>
                 </div>
                 <div>
                   <span className="text-[7.5px] font-mono text-[#77756f] block uppercase">
-                    VALID TILL
+                    {t.about.badgeDegree}
+                  </span>
+                  <span className="text-[9.5px] font-mono font-semibold text-[#0d0d0d] truncate block">
+                    {t.about.badgeDegreeVal}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-[7.5px] font-mono text-[#77756f] block uppercase">
+                    {t.about.badgeValid}
                   </span>
                   <span className="text-[10px] font-mono font-bold text-[#0d0d0d]">
-                    {PROFILE.idCard.validTill}
+                    {t.about.badgeValidVal}
                   </span>
                 </div>
               </div>
@@ -245,10 +252,10 @@ export default function LanyardCard() {
             {/* Back Header */}
             <div className="pt-2 border-b border-[rgba(13,13,13,0.08)] pb-2">
               <span className="font-mono text-[9px] font-bold tracking-wider uppercase text-[#0d0d0d] block">
-                WHAT I AM // CREDENTIALS
+                {t.about.backTitle}
               </span>
               <span className="font-mono text-[8px] text-[#77756f]">
-                OFFICIAL RECORD & CLEARANCE
+                {lang === "fr" ? "REGISTRE OFFICIEL D'INGÉNIERIE" : "OFFICIAL RECORD & CLEARANCE"}
               </span>
             </div>
 
@@ -256,31 +263,31 @@ export default function LanyardCard() {
             <div className="my-auto space-y-2.5 text-left">
               <div>
                 <span className="font-mono text-[8px] uppercase tracking-wider text-[#77756f] block">
-                  Degree & Alma Mater
+                  {lang === "fr" ? "Diplôme & École" : "Degree & Alma Mater"}
                 </span>
                 <span className="text-xs font-bold text-[#0d0d0d] block">
                   {PROFILE.idCard.degree}
                 </span>
                 <span className="font-mono text-[9px] text-[#3a3a3a] block">
-                  Specialization: Embedded Systems & Rail
+                  {lang === "fr" ? "Spécialité : Systèmes Embarqués & Ferroviaire" : "Specialization: Embedded Systems & Rail"}
                 </span>
               </div>
 
               <div>
                 <span className="font-mono text-[8px] uppercase tracking-wider text-[#77756f] block">
-                  Industrial Experience
+                  {lang === "fr" ? "Expérience Industrielle" : "Industrial Experience"}
                 </span>
                 <span className="text-[10px] text-[#0d0d0d] font-medium block">
-                  • Alstom: Project Configuration & Change Manager (CBTC GoA4)
+                  • Alstom : {lang === "fr" ? "Configuration Projet & CCB (CBTC GoA4)" : "Project Configuration & CCB (CBTC GoA4)"}
                 </span>
                 <span className="text-[10px] text-[#0d0d0d] font-medium block">
-                  • Renault Group: 3 yrs Embedded Systems (ISO 26262 ASIL-D)
+                  • Renault Group : {lang === "fr" ? "3 ans calculateurs ECU (ISO 26262 ASIL-D)" : "3 yrs Embedded Systems (ISO 26262 ASIL-D)"}
                 </span>
               </div>
 
               <div>
                 <span className="font-mono text-[8px] uppercase tracking-wider text-[#77756f] block">
-                  Core Problem-Solving & Tooling
+                  {t.about.backSkillsTitle}
                 </span>
                 <div className="flex flex-wrap gap-1 mt-1">
                   {PROFILE.idCard.keySkills.map((sk) => (
@@ -297,7 +304,7 @@ export default function LanyardCard() {
               {/* Signature Line */}
               <div className="pt-1">
                 <span className="font-mono text-[8px] uppercase tracking-wider text-[#77756f] block">
-                  Holder Signature
+                  {lang === "fr" ? "Signature du titulaire" : "Holder Signature"}
                 </span>
                 <div className="h-6 flex items-end">
                   <span className="font-serif italic text-base text-[#0d0d0d] tracking-wider select-none">
@@ -310,7 +317,7 @@ export default function LanyardCard() {
 
             {/* Back Footer: "If found, say hello · [email]" */}
             <div className="pt-2 border-t border-[rgba(13,13,13,0.08)] flex items-center justify-between text-[8.5px] font-mono text-[#77756f]">
-              <span className="truncate">If found, say hello · {PROFILE.email}</span>
+              <span className="truncate">{lang === "fr" ? "Contact direct :" : "If found, say hello ·"} {PROFILE.email}</span>
               <span className="shrink-0 ml-1">↻</span>
             </div>
           </div>

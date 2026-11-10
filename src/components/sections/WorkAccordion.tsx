@@ -1,17 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { PROJECTS, ProjectItem } from "@/lib/data";
+import { getProjects, ProjectItem } from "@/lib/data";
 import IllustrativeUI from "./IllustrativeUI";
+import { useLanguage } from "@/lib/LanguageContext";
+import { TRANSLATIONS } from "@/lib/translations";
 
 export default function WorkAccordion() {
-  const [activeId, setActiveId] = useState<string>(PROJECTS[0].id);
+  const { lang } = useLanguage();
+  const t = TRANSLATIONS[lang];
+  const projects = getProjects(lang);
+  const [activeId, setActiveId] = useState<string>(projects[0].id);
 
   return (
     <div>
       {/* Desktop Horizontal Accordion (hidden on < lg) */}
       <div className="hidden lg:flex w-full min-h-[580px] gap-2.5">
-        {PROJECTS.map((proj) => {
+        {projects.map((proj) => {
           const isOpen = proj.id === activeId;
 
           return (
@@ -62,7 +67,7 @@ export default function WorkAccordion() {
 
                         <div className="space-y-2 pt-2">
                           <span className="font-mono text-[10px] uppercase tracking-wider text-[var(--mute)] block">
-                            Key Deliverables & Verification
+                            {t.work.deliverablesLabel}
                           </span>
                           <ul className="space-y-1.5 text-xs text-[var(--ink-2)]">
                             {proj.features.map((feat, i) => (
@@ -81,7 +86,7 @@ export default function WorkAccordion() {
 
                         {/* Impact pill */}
                         <div className="p-3 rounded-xl bg-[var(--paper)] border border-[var(--line)] flex items-center justify-between text-xs font-mono">
-                          <span className="text-[var(--mute)]">VERIFIED IMPACT:</span>
+                          <span className="text-[var(--mute)]">{t.work.impactLabel}</span>
                           <span className="text-[var(--ink)] font-bold">{proj.impact}</span>
                         </div>
                       </div>
@@ -102,7 +107,7 @@ export default function WorkAccordion() {
                     </div>
 
                     <span className="font-mono text-[10px] text-[var(--mute)]">
-                      CONFIDENTIAL / SYSTEM INTEGRATION
+                      {lang === "fr" ? "CONFIDENTIEL / INTÉGRATION SYSTÈME" : "CONFIDENTIAL / SYSTEM INTEGRATION"}
                     </span>
                   </div>
                 </div>
@@ -127,7 +132,7 @@ export default function WorkAccordion() {
 
       {/* Mobile Stacked Accordion (hidden on >= lg) */}
       <div className="lg:hidden flex flex-col gap-4">
-        {PROJECTS.map((proj) => {
+        {projects.map((proj) => {
           const isOpen = proj.id === activeId;
 
           return (
@@ -176,7 +181,7 @@ export default function WorkAccordion() {
                   <IllustrativeUI type={proj.illustrativeType} />
 
                   <div className="p-3 rounded-lg bg-[var(--paper)] border border-[var(--line)] text-xs font-mono flex items-center justify-between">
-                    <span className="text-[var(--mute)]">IMPACT:</span>
+                    <span className="text-[var(--mute)]">{t.work.impactLabel}</span>
                     <span className="font-bold text-[var(--ink)]">{proj.impact}</span>
                   </div>
 

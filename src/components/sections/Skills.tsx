@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { SKILL_GROUPS, SkillItem } from "@/lib/data";
 import TechLogo from "@/components/ui/TechLogo";
+import { useLanguage } from "@/lib/LanguageContext";
+import { TRANSLATIONS } from "@/lib/translations";
 
 const FAMILIES: Array<SkillItem["family"] | "All"> = [
   "All",
@@ -40,6 +42,25 @@ const FAMILY_DEFAULT_STYLES: Record<SkillItem["family"], { bg: string; text: str
 export default function Skills() {
   const [selectedFamily, setSelectedFamily] = useState<SkillItem["family"] | "All">("All");
   const [hoveredSkill, setHoveredSkill] = useState<SkillItem | null>(null);
+  const { lang } = useLanguage();
+  const t = TRANSLATIONS[lang];
+
+  const getFamilyLabel = (family: SkillItem["family"] | "All") => {
+    switch (family) {
+      case "All":
+        return t.skills.families.all;
+      case "Languages":
+        return t.skills.families.languages;
+      case "Systems & Hardware":
+        return t.skills.families.systems;
+      case "PLM & Configuration":
+        return t.skills.families.plm;
+      case "DevOps & Tools":
+        return t.skills.families.devops;
+      default:
+        return family;
+    }
+  };
 
   return (
     <section id="skills" className="py-24 border-t border-[var(--line)] bg-[var(--paper)]">
@@ -48,7 +69,7 @@ export default function Skills() {
         <div className="flex items-center gap-3 mb-6">
           <span className="font-mono text-xs text-[var(--mute)]">02 //</span>
           <span className="font-mono text-xs uppercase tracking-widest text-[var(--ink)]">
-            Technical Stack
+            {lang === "fr" ? "Stack Technique & Compétences" : "Technical Stack"}
           </span>
           <div className="flex-1 h-[1px] bg-[var(--line)]" />
         </div>
@@ -56,10 +77,13 @@ export default function Skills() {
         {/* Title Matching Reel Exactly: "The periodic table of my stack." */}
         <div className="mb-8">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[var(--ink)] leading-tight">
-            The periodic table <span className="font-serif italic font-normal text-[var(--mute)]">of my stack.</span>
+            {t.skills.heading}{" "}
+            <span className="font-serif italic font-normal text-[var(--mute)]">
+              {t.skills.headingAccent}
+            </span>
           </h2>
           <p className="text-sm sm:text-base text-[var(--mute)] mt-3 max-w-2xl font-normal">
-            32 elements in four families. Hover a tile to see its logo, or pick a family to light it up.
+            {t.skills.subtitle}
           </p>
 
           {/* Family Filter Chips Matching Reel */}
@@ -89,7 +113,7 @@ export default function Skills() {
                       }`}
                     />
                   )}
-                  <span>{family}</span>
+                  <span>{getFamilyLabel(family)}</span>
                 </button>
               );
             })}
@@ -164,18 +188,18 @@ export default function Skills() {
 
             {/* Quick Family Legend */}
             <div className="mt-6 pt-4 border-t border-[var(--line)] flex flex-wrap items-center gap-6 text-[11px] font-mono text-[var(--mute)]">
-              <span className="text-[var(--ink)] font-semibold">FAMILIES:</span>
+              <span className="text-[var(--ink)] font-semibold">{t.skills.familiesLegend}</span>
               <span className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-blue-500" /> Languages
+                <span className="w-2 h-2 rounded-full bg-blue-500" /> {t.skills.families.languages}
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-500" /> Systems & Hardware
+                <span className="w-2 h-2 rounded-full bg-emerald-500" /> {t.skills.families.systems}
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-amber-500" /> PLM & Configuration
+                <span className="w-2 h-2 rounded-full bg-amber-500" /> {t.skills.families.plm}
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-purple-500" /> DevOps & Tools
+                <span className="w-2 h-2 rounded-full bg-purple-500" /> {t.skills.families.devops}
               </span>
             </div>
           </div>
@@ -188,7 +212,7 @@ export default function Skills() {
                   {/* Top Bar */}
                   <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
                     <span className="font-mono text-[10px] uppercase tracking-wider text-[var(--mute)]">
-                      ELEMENT INSPECTOR
+                      {t.skills.inspectorTitle}
                     </span>
                     <span className="font-mono text-xs font-semibold text-[var(--ink)]">
                       #{String(hoveredSkill.number).padStart(2, "0")}
@@ -218,7 +242,7 @@ export default function Skills() {
                           FAMILY_DEFAULT_STYLES[hoveredSkill.family].dot
                         }`}
                       />
-                      {hoveredSkill.family}
+                      {getFamilyLabel(hoveredSkill.family)}
                     </div>
                   </div>
 
@@ -231,7 +255,7 @@ export default function Skills() {
                   {hoveredSkill.projects.length > 0 && (
                     <div className="border-t border-[var(--line)] pt-3">
                       <span className="font-mono text-[9px] uppercase tracking-wider text-[var(--mute)] block mb-2">
-                        Applied in Projects
+                        {t.skills.appliedIn}
                       </span>
                       <div className="flex flex-wrap gap-1.5">
                         {hoveredSkill.projects.map((proj) => (
@@ -256,10 +280,10 @@ export default function Skills() {
                   </div>
                   <div>
                     <p className="text-sm font-medium text-[var(--ink)]">
-                      ↖ Hover any element to see its logo
+                      {t.skills.emptyHint}
                     </p>
                     <p className="text-xs text-[var(--mute)] mt-1 max-w-[200px] mx-auto">
-                      Explore 32 technologies, standards & tools across embedded railway engineering.
+                      {t.skills.emptySub}
                     </p>
                   </div>
                 </div>

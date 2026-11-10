@@ -1,13 +1,16 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import { PROFILE } from "@/lib/data";
+import { useLanguage } from "@/lib/LanguageContext";
+import { TRANSLATIONS } from "@/lib/translations";
 
 export default function Hero() {
   const [isPlayingSound, setIsPlayingSound] = useState(false);
   const [isAutoplayBlocked, setIsAutoplayBlocked] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const sectionRef = useRef<HTMLElement | null>(null);
+  const { lang } = useLanguage();
+  const t = TRANSLATIONS[lang];
 
   // Play video with or without sound
   const attemptPlay = useCallback(async () => {
@@ -31,6 +34,14 @@ export default function Hero() {
       }
     }
   }, []);
+
+  // When language switches, reload video source and play
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    video.load();
+    video.play().catch(() => {});
+  }, [lang]);
 
   // Unlock sound on user interaction
   useEffect(() => {
@@ -107,38 +118,38 @@ export default function Hero() {
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-[96vh] pt-24 pb-12 flex flex-col justify-between overflow-hidden bg-[var(--paper)] select-none"
+      className="relative min-h-[100svh] pt-24 pb-8 flex flex-col justify-between overflow-hidden bg-[var(--paper)] select-none"
     >
-      {/* 1. Giant Outlined Ghost Word "HANI" Across Entire Screen Behind Person (Exact Reel frame_01_2.0s.jpg) */}
+      {/* 1. Giant Outlined Ghost Word "HANI" Directly Behind Character with High Contrast */}
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full select-none pointer-events-none z-0"
         aria-hidden="true"
       >
         <span
-          className="text-[22vw] font-black uppercase tracking-tighter opacity-[0.05] block text-center leading-none"
+          className="text-[24vw] font-black uppercase tracking-tighter block text-center leading-none select-none"
           style={{
-            WebkitTextStroke: "2.5px var(--ink)",
-            color: "transparent",
+            WebkitTextStroke: "1.5px rgba(13, 13, 13, 0.09)",
+            color: "rgba(13, 13, 13, 0.045)",
           }}
         >
-          HANI
+          {t.hero.ghostName}
         </span>
       </div>
 
-      {/* 2. Top Bar Audio Button & Availability Badge */}
+      {/* 2. Top Bar Availability Badge & Sound Button */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-20 flex items-center justify-between">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[var(--card)] border border-[var(--line)] shadow-xs">
           <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse-dot" />
           <span className="text-xs font-mono uppercase tracking-wider text-[var(--ink-2)]">
-            Open for missions • Paris & Remote
+            {t.hero.statusBadge}
           </span>
         </div>
 
         {/* 46px Round Solid Ink Sound Control Button */}
         <button
           onClick={toggleSound}
-          aria-label={isPlayingSound ? "Mute audio" : "Play audio with voice introduction"}
-          className="w-[46px] h-[46px] rounded-full bg-[var(--ink)] text-[var(--paper)] shadow-lg flex items-center justify-center hover:scale-105 active:scale-95 transition-all cursor-pointer z-20 group"
+          aria-label={isPlayingSound ? t.hero.audioMuteAria : t.hero.audioPlayAria}
+          className="relative w-[46px] h-[46px] rounded-full bg-[var(--ink)] text-[var(--paper)] shadow-lg flex items-center justify-center hover:scale-105 active:scale-95 transition-all cursor-pointer z-20 group"
         >
           {isPlayingSound ? (
             <span className="flex items-center gap-[3px] h-3.5">
@@ -158,39 +169,38 @@ export default function Hero() {
         </button>
       </div>
 
-      {/* 3. Centered 3D Talking Character Video Stage (Matching Guide min(96svh, 1040px) / 62svh mobile) */}
-      <div className="relative w-full max-w-[580px] sm:max-w-[640px] md:max-w-[700px] h-[62svh] sm:h-[72svh] md:h-[78svh] mx-auto flex items-center justify-center my-auto z-10 pointer-events-none select-none">
-        <div className="relative w-full h-full mix-blend-multiply flex items-center justify-center overflow-hidden">
-          <video
-            ref={videoRef}
-            muted
-            loop
-            playsInline
-            preload="auto"
-            className="w-full h-full object-contain"
-            style={{
-              aspectRatio: "768/960",
-              mixBlendMode: "multiply",
-            }}
-          >
-            <source src="/hero/hero.webm" type="video/webm" />
-            <source src="/hero/hero.mp4" type="video/mp4" />
-          </video>
-        </div>
+      {/* 3. Centered 3D Character Video Stage (Upright, Seamless Transparent Alpha onto Paper Background) */}
+      <div className="absolute inset-0 max-w-[840px] h-[78svh] sm:h-[82svh] md:h-[86svh] m-auto flex items-center justify-center z-10 pointer-events-none select-none">
+        <video
+          key={lang}
+          ref={videoRef}
+          muted
+          loop
+          playsInline
+          autoPlay
+          preload="auto"
+          className="w-full h-full object-contain pointer-events-none select-none scale-105 sm:scale-115 md:scale-120 origin-bottom"
+          style={{
+            aspectRatio: "640/800",
+          }}
+        >
+          <source src={t.hero.videoSrcWebm} type="video/webm" />
+          <source src={t.hero.videoSrcMp4} type="video/mp4" />
+        </video>
       </div>
 
       {/* 4. Bottom Row: Left Headlines + Right Buttons (Exact Reel Layout frame_01_2.0s.jpg) */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-20 flex flex-col md:flex-row md:items-end justify-between gap-6 pt-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-20 flex flex-col md:flex-row md:items-end justify-between gap-6 pb-2 md:pb-4">
         {/* Bottom-Left: Role Headline */}
         <div className="space-y-1.5 max-w-xl text-left">
           <span className="font-mono text-xs uppercase tracking-wider text-[var(--mute)] block">
-            {PROFILE.name}
+            {t.hero.roleTag}
           </span>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[var(--ink)] leading-[1.08]">
-            Electronics & <span className="font-serif italic font-normal text-[var(--mute)]">Embedded</span> Systems Engineer.
+            {t.hero.titlePrimary} <span className="font-serif italic font-normal text-[var(--mute)]">{t.hero.titleAccent}</span> {t.hero.titleSuffix}
           </h1>
           <p className="text-xs sm:text-sm text-[var(--mute)] font-normal pt-1">
-            Specialized in mission-critical railway signaling, automated PLM workflows, and intelligent embedded architectures.
+            {t.hero.description}
           </p>
         </div>
 
@@ -200,14 +210,14 @@ export default function Hero() {
             onClick={() => scrollToSection("work")}
             className="px-6 py-3 rounded-full bg-[var(--ink)] text-[var(--paper)] text-xs font-mono font-medium hover:bg-[var(--ink-2)] transition-all cursor-pointer shadow-xs"
           >
-            Explore work →
+            {t.hero.ctaExplore}
           </button>
 
           <button
             onClick={() => scrollToSection("contact")}
             className="px-5 py-3 rounded-full bg-[var(--card)] border border-[var(--line)] text-xs font-mono font-medium text-[var(--ink)] hover:border-[var(--ink)] hover:bg-[var(--soft)] transition-all cursor-pointer"
           >
-            Let&apos;s talk
+            {t.hero.ctaTalk}
           </button>
 
           <a
@@ -216,7 +226,7 @@ export default function Hero() {
             rel="noopener noreferrer"
             className="px-5 py-3 rounded-full bg-[var(--card)] border border-[var(--line)] text-xs font-mono font-medium text-[var(--ink)] hover:border-[var(--ink)] hover:bg-[var(--soft)] transition-all flex items-center gap-1.5"
           >
-            <span>Resume</span>
+            <span>{lang === "fr" ? "Mon CV" : "Resume"}</span>
             <span className="font-mono text-xs opacity-60">↓</span>
           </a>
         </div>

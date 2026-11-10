@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ACHIEVEMENTS } from "@/lib/data";
+import { getAchievements } from "@/lib/data";
+import { useLanguage } from "@/lib/LanguageContext";
+import { TRANSLATIONS } from "@/lib/translations";
 
 function CountUpNumber({
   target,
@@ -65,6 +67,9 @@ function CountUpNumber({
 
 export default function Achievements() {
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+  const { lang } = useLanguage();
+  const t = TRANSLATIONS[lang];
+  const achievements = getAchievements(lang);
 
   const scrollLeft = () => {
     if (scrollContainerRef.current) {
@@ -85,7 +90,7 @@ export default function Achievements() {
         <div className="flex items-center gap-3 mb-6">
           <span className="font-mono text-xs text-[var(--mute)]">06 //</span>
           <span className="font-mono text-xs uppercase tracking-widest text-[var(--ink)]">
-            Achievements
+            {lang === "fr" ? "Résultats & Réalisations" : "Achievements"}
           </span>
           <div className="flex-1 h-[1px] bg-[var(--line)]" />
         </div>
@@ -94,11 +99,13 @@ export default function Achievements() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[var(--ink)] leading-tight">
-              Proud <span className="font-serif italic font-normal text-[var(--mute)]">moments.</span>
+              {t.achievements.heading}{" "}
+              <span className="font-serif italic font-normal text-[var(--mute)]">
+                {t.achievements.headingAccent}
+              </span>
             </h2>
             <p className="text-sm sm:text-base text-[var(--mute)] mt-3 max-w-xl font-normal">
-              Quantifiable operational outcomes achieved across industrial railway programs,
-              continuous testing environments, and multi-tier configuration baselines.
+              {t.achievements.subtitle}
             </p>
           </div>
 
@@ -127,7 +134,7 @@ export default function Achievements() {
           className="flex gap-6 overflow-x-auto pb-8 pt-2 scroll-smooth no-scrollbar snap-x snap-mandatory"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
-          {ACHIEVEMENTS.map((item) => (
+          {achievements.map((item) => (
             <div
               key={item.index}
               className="min-w-[300px] sm:min-w-[360px] md:min-w-[420px] snap-start rounded-3xl bg-[var(--card)] border border-[var(--line)] p-7 sm:p-8 flex flex-col justify-between shadow-xs hover:border-[var(--ink)] hover:-translate-y-2 hover:shadow-xl transition-all duration-300"

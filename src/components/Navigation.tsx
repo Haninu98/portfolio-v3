@@ -2,21 +2,34 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { NAV, PROFILE } from "@/lib/data";
+import { PROFILE } from "@/lib/data";
 import { useScrollProgress } from "@/lib/hooks";
+import { useLanguage } from "@/lib/LanguageContext";
+import { TRANSLATIONS } from "@/lib/translations";
 
 export default function Navigation() {
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("about");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const scrollProgress = useScrollProgress();
+  const { lang, setLang } = useLanguage();
+  const t = TRANSLATIONS[lang];
+
+  const navItems = [
+    { label: t.nav.about, href: "#about", index: "01" },
+    { label: t.nav.skills, href: "#skills", index: "02" },
+    { label: t.nav.work, href: "#work", index: "03" },
+    { label: t.nav.certifications, href: "#certifications", index: "04" },
+    { label: t.nav.experience, href: "#experience", index: "05" },
+    { label: t.nav.achievements, href: "#achievements", index: "06" },
+    { label: t.nav.contact, href: "#contact", index: "07" },
+  ];
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 40);
 
-      // Determine active section based on scroll position
-      const sections = NAV.map((item) => item.href.replace("#", ""));
+      const sections = navItems.map((item) => item.href.replace("#", ""));
       const scrollPos = window.scrollY + 200;
 
       for (let i = sections.length - 1; i >= 0; i--) {
@@ -91,7 +104,7 @@ export default function Navigation() {
                 {PROFILE.name}
               </span>
               <span className="text-[10px] text-[var(--mute)] font-mono tracking-wider hidden sm:block">
-                Electronics & Embedded Systems
+                {lang === "fr" ? "Électronique & Embarqué" : "Electronics & Embedded"}
               </span>
             </div>
           </Link>
@@ -101,7 +114,7 @@ export default function Navigation() {
             aria-label="Primary"
             className="hidden md:flex items-center gap-1 px-3 py-1.5 rounded-full bg-[var(--card)]/90 backdrop-blur-md border border-[var(--line)] shadow-xs"
           >
-            {NAV.map((item) => {
+            {navItems.map((item) => {
               const sectionId = item.href.replace("#", "");
               const isActive = activeSection === sectionId;
 
@@ -124,25 +137,61 @@ export default function Navigation() {
             })}
           </nav>
 
-          {/* Right Action: Status Pill & Contact CTA */}
+          {/* Right Action: Language Switcher, Status Pill & Contact CTA */}
           <div className="flex items-center gap-3">
+            {/* Modern Glassmorphism Sliding Language Switcher Button */}
+            <div
+              className="relative flex items-center p-0.5 rounded-full bg-white/70 backdrop-blur-md border border-[var(--line)] shadow-xs"
+              role="group"
+              aria-label="Language selection"
+            >
+              {/* Sliding Pill Indicator */}
+              <div
+                className={`absolute top-0.5 bottom-0.5 w-[30px] rounded-full bg-[var(--ink)] transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                  lang === "fr" ? "translate-x-[30px]" : "translate-x-0"
+                }`}
+              />
+
+              <button
+                type="button"
+                onClick={() => setLang("en")}
+                className={`relative z-10 w-[30px] py-1 text-[11px] font-mono font-bold text-center rounded-full transition-colors duration-200 cursor-pointer ${
+                  lang === "en" ? "text-[var(--paper)]" : "text-[var(--ink-2)] hover:text-[var(--ink)]"
+                }`}
+                aria-pressed={lang === "en"}
+              >
+                EN
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setLang("fr")}
+                className={`relative z-10 w-[30px] py-1 text-[11px] font-mono font-bold text-center rounded-full transition-colors duration-200 cursor-pointer ${
+                  lang === "fr" ? "text-[var(--paper)]" : "text-[var(--ink-2)] hover:text-[var(--ink)]"
+                }`}
+                aria-pressed={lang === "fr"}
+              >
+                FR
+              </button>
+            </div>
+
             <div className="hidden lg:flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--card)] border border-[var(--line)] text-[11px] font-mono text-[var(--ink-2)]">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse-dot" />
-              <span>Available for Missions</span>
+              <span>{t.nav.availableBadge}</span>
             </div>
 
             <button
               onClick={() => handleLinkClick("#contact")}
               className="px-3.5 py-1.5 rounded-full bg-[var(--ink)] text-[var(--paper)] text-xs font-medium hover:bg-[var(--ink-2)] transition-colors cursor-pointer"
             >
-              Get in touch
+              {t.nav.getInTouch}
             </button>
 
             {/* Mobile Hamburger Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="md:hidden w-9 h-9 rounded-full border border-[var(--line)] bg-[var(--card)] flex flex-col items-center justify-center gap-1.5 cursor-pointer"
-              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+              aria-label={mobileMenuOpen ? t.nav.close : t.nav.menu}
               aria-expanded={mobileMenuOpen}
             >
               <span
@@ -171,7 +220,7 @@ export default function Navigation() {
             <span className="text-[10px] font-mono uppercase tracking-widest text-[var(--mute)]">
               Index
             </span>
-            {NAV.map((item, idx) => (
+            {navItems.map((item) => (
               <button
                 key={item.href}
                 onClick={() => handleLinkClick(item.href)}
@@ -188,7 +237,7 @@ export default function Navigation() {
           <div className="pt-8 border-t border-[var(--line)] flex flex-col gap-3">
             <div className="flex items-center gap-2 text-xs font-mono text-[var(--ink-2)]">
               <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse-dot" />
-              <span>{PROFILE.statusBadge}</span>
+              <span>{t.nav.availableBadge}</span>
             </div>
             <p className="text-xs text-[var(--mute)] font-mono">
               {PROFILE.location} • {PROFILE.email}

@@ -1,11 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { PROFILE } from "@/lib/data";
+import { useLanguage } from "@/lib/LanguageContext";
+import { TRANSLATIONS } from "@/lib/translations";
 
 export default function Contact() {
   const [copied, setCopied] = useState(false);
+  const { lang } = useLanguage();
+  const t = TRANSLATIONS[lang];
 
   const copyEmail = () => {
     navigator.clipboard.writeText(PROFILE.email);
@@ -17,7 +20,7 @@ export default function Contact() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const hoppingText = "Let's build something together.";
+  const hoppingText = t.contact.hoppingText;
 
   return (
     <section id="contact" className="pt-24 pb-12 border-t border-[var(--line)] bg-[var(--paper)] relative overflow-hidden">
@@ -26,7 +29,7 @@ export default function Contact() {
         <div className="flex items-center gap-3 mb-12">
           <span className="font-mono text-xs text-[var(--mute)]">07 //</span>
           <span className="font-mono text-xs uppercase tracking-widest text-[var(--ink)]">
-            Initiate Collaboration
+            {lang === "fr" ? "Coopération & Contact" : "Initiate Collaboration"}
           </span>
           <div className="flex-1 h-[1px] bg-[var(--line)]" />
         </div>
@@ -46,9 +49,8 @@ export default function Contact() {
               </span>
             ))}
           </div>
-          <p className="text-sm sm:text-base md:text-lg text-[var(--mute)] mt-4 max-w-xl font-normal">
-            Whether for railway signaling programs, safety-critical embedded systems,
-            or enterprise PLM transformation, let&apos;s engineer dependable solutions together.
+          <p className="text-sm sm:text-base md:text-lg text-[var(--mute)] mt-4 max-w-2xl font-normal leading-relaxed">
+            {t.contact.subtitle}
           </p>
         </div>
 
@@ -57,7 +59,7 @@ export default function Contact() {
           {/* Main Email Capsule (8 cols) */}
           <div className="lg:col-span-8 p-8 rounded-2xl bg-[var(--card)] border border-[var(--line)] shadow-xs space-y-6">
             <span className="font-mono text-xs uppercase tracking-wider text-[var(--mute)] block">
-              Direct Inquiries
+              {t.contact.directTitle}
             </span>
 
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -71,11 +73,11 @@ export default function Contact() {
               >
                 {copied ? (
                   <>
-                    <span className="text-emerald-400">✓</span> Copied to clipboard!
+                    <span className="text-emerald-400">✓</span> {t.contact.copiedText}
                   </>
                 ) : (
                   <>
-                    <span>📋</span> Copy Address
+                    <span>📋</span> {t.contact.copyButton}
                   </>
                 )}
               </button>
@@ -84,7 +86,7 @@ export default function Contact() {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 border-t border-[var(--line)]">
               <div>
                 <span className="font-mono text-[10px] uppercase text-[var(--mute)] block">
-                  Telephone
+                  {t.contact.phoneLabel}
                 </span>
                 <a
                   href={PROFILE.phoneHref}
@@ -96,7 +98,7 @@ export default function Contact() {
 
               <div>
                 <span className="font-mono text-[10px] uppercase text-[var(--mute)] block">
-                  Location
+                  {t.contact.locationLabel}
                 </span>
                 <span className="font-mono text-sm text-[var(--ink)]">
                   {PROFILE.location}
@@ -105,10 +107,10 @@ export default function Contact() {
 
               <div>
                 <span className="font-mono text-[10px] uppercase text-[var(--mute)] block">
-                  Availability
+                  {t.contact.availabilityLabel}
                 </span>
                 <span className="font-mono text-sm text-emerald-600 font-medium">
-                  Immediate / 2025
+                  {t.contact.availabilityValue}
                 </span>
               </div>
             </div>
@@ -118,27 +120,17 @@ export default function Contact() {
           <div className="lg:col-span-4 flex flex-col justify-between gap-6 p-8 rounded-2xl bg-[var(--card)] border border-[var(--line)] shadow-xs">
             <div className="space-y-3">
               <span className="font-mono text-xs uppercase tracking-wider text-[var(--mute)] block">
-                Network & Repositories
+                {t.contact.networkTitle}
               </span>
 
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2.5">
                 <a
                   href={PROFILE.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-4 py-2.5 rounded-xl bg-[var(--paper)] border border-[var(--line)] text-xs font-mono text-[var(--ink)] flex items-center justify-between hover:border-[var(--ink)] transition-colors"
+                  className="px-4 py-3 rounded-xl bg-[var(--paper)] border border-[var(--line)] text-xs font-mono text-[var(--ink)] flex items-center justify-between hover:border-[var(--ink)] hover:bg-[var(--soft)] transition-all"
                 >
-                  <span>LinkedIn Profile</span>
-                  <span>↗</span>
-                </a>
-
-                <a
-                  href={PROFILE.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-4 py-2.5 rounded-xl bg-[var(--paper)] border border-[var(--line)] text-xs font-mono text-[var(--ink)] flex items-center justify-between hover:border-[var(--ink)] transition-colors"
-                >
-                  <span>GitHub Repositories</span>
+                  <span>{t.contact.linkedinLabel}</span>
                   <span>↗</span>
                 </a>
 
@@ -146,20 +138,10 @@ export default function Contact() {
                   href="/resume.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-4 py-2.5 rounded-xl bg-[var(--paper)] border border-[var(--line)] text-xs font-mono text-[var(--ink)] flex items-center justify-between hover:border-[var(--ink)] transition-colors"
+                  className="px-4 py-3 rounded-xl bg-[var(--paper)] border border-[var(--line)] text-xs font-mono text-[var(--ink)] flex items-center justify-between hover:border-[var(--ink)] hover:bg-[var(--soft)] transition-all"
                 >
-                  <span>Download Résumé (PDF)</span>
+                  <span>{t.contact.resumeLabel}</span>
                   <span>↓</span>
-                </a>
-
-                <a
-                  href={PROFILE.portfolioV1}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-4 py-2.5 rounded-xl bg-[var(--paper)] border border-[var(--line)] text-xs font-mono text-[var(--mute)] hover:text-[var(--ink)] flex items-center justify-between hover:border-[var(--ink)] transition-colors"
-                >
-                  <span>Portfolio V1 Archive</span>
-                  <span>↗</span>
                 </a>
               </div>
             </div>
@@ -178,7 +160,7 @@ export default function Contact() {
                   />
                   <text className="text-[10px] font-mono uppercase tracking-widest fill-[var(--ink)]">
                     <textPath href="#textPathCircle" startOffset="0%">
-                      • HANI IZEM • SAY HELLO • 2025 •
+                      {t.contact.stampText}
                     </textPath>
                   </text>
                 </svg>
@@ -195,7 +177,7 @@ export default function Contact() {
           <div className="flex items-center gap-2">
             <span className="font-bold text-[var(--ink)]">HANI IZEM</span>
             <span>—</span>
-            <span>ELECTRONICS & EMBEDDED SYSTEMS ENGINEER</span>
+            <span>{t.contact.footerRole}</span>
           </div>
 
           <div className="flex items-center gap-6">
@@ -204,7 +186,7 @@ export default function Contact() {
               onClick={scrollToTop}
               className="hover:text-[var(--ink)] cursor-pointer transition-colors"
             >
-              Back to top ↑
+              {t.contact.backToTop}
             </button>
           </div>
         </div>
@@ -212,3 +194,4 @@ export default function Contact() {
     </section>
   );
 }
+
